@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this package, please cite the paper and repository."
+title: "From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks"
+type: software
+authors:
+  - family-names: "Rokni Lamouki"
+    given-names: "Niko"
+    email: "nrokni@uel.ac.uk"
+  - family-names: "Soofiyan"
+    given-names: "Salma"
+  - family-names: "Karami"
+    given-names: "Amin"
+repository-code: "https://github.com/nikorokni/local-currency-defi-solvency-stress-test"
+date-released: 2026-08-10
+license: MIT
+version: 1.0.0

@@ -1,0 +1,5 @@
+currency,collateral,realised_windows,mean_liquidated_exposure_share,maximum_liquidated_exposure_share,mean_bad_debt_ratio,maximum_bad_debt_ratio,windows_bad_debt_above_10pct,worst_bad_debt_window_start
+ARS,BTC,31,0.5924731185,1,0.03634168978,0.2048737503,6,2021-07
+ARS,ETH,31,0.5408602138,1,0.03734273071,0.2700047851,3,2022-06
+TRY,BTC,31,0.604193548,1,0.03465203423,0.1834343854,6,2021-07
+TRY,ETH,31,0.5381720419,1,0.03956301458,0.2279355806,4,2022-06

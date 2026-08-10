@@ -1,0 +1,17 @@
+{
+  "analysis_window": [
+    "2020-01",
+    "2023-07"
+  ],
+  "coinmetrics_repository_commit": "f1a36afb962731c387bb03982758ab0103063da5",
+  "joint_return_observations": 42,
+  "makerdao_source_repository_commit": "6f6710982391b88f48a3dc7bb5bbfecc7691a47f",
+  "monthly_level_observations": 43,
+  "raw_file_sha256": {
+    "data/raw_fx/ars_usd_fred.csv": "1dacf0b03e50660e0bbd819e3b73f6783576517a8d0cf9ac2559dbb92d0f455d",
+    "data/raw_fx/try_usd_fred.csv": "51d90a2eb45a989dcc078e04dacfcb06637026e90a3ead8d8290e8a61a32aad4",
+    "data/raw_prices/coinmetrics_btc.csv": "d8534df0ef2a8435e414f201c1081773ec5b07a7e20c7cf19fef1183758d5d79",
+    "data/raw_prices/coinmetrics_eth.csv": "2c4588fac04c67a4f237054e24f63d8e78ef71f41f4edf5be44ccb3179649237",
+    "external/makerdao_eth_a_draw_events_analysis.csv": "0a9e0f0528345086b3a0f4ece8bb2fddd9080c97f5a0657f27a3549587e132b5"
+  }
+}

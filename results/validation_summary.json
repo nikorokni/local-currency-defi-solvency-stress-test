@@ -1,0 +1,13 @@
+{
+  "all_main_values_finite": true,
+  "base_block_length": 3,
+  "bootstrap_paths": 20000,
+  "cohort_result_rows": 744,
+  "historical_window_rows": 744,
+  "horizon_months": 12,
+  "joint_return_observations": 42,
+  "main_result_rows": 24,
+  "probabilities_in_unit_interval": true,
+  "robustness_paths": 10000,
+  "seed": 20260810
+}

@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+tmp/
+manuscript/*.aux
+manuscript/*.bbl
+manuscript/*.blg
+manuscript/*.fdb_latexmk
+manuscript/*.fls
+manuscript/*.log
+manuscript/*.out
+manuscript/*.synctex.gz
+manuscript/*.toc

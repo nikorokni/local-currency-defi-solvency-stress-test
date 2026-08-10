@@ -1,0 +1,9 @@
+stage,count,rule
+Raw successful Vat call traces,4466880,Public BigQuery extraction archive
+Decoded ETH-A debt-changing events,229224,"frob, grab, and fork with non-zero dart"
+Positive ETH-A frob debt draws,137426,Operational definition of borrowing event
+Excluded before 2020-01-01,6527,Prespecified analysis window
+Excluded draw amounts below 1 DAI after date filter,157,Economically de minimis debt adjustments; avoids gas-cost singularities
+Final draw-event analysis sample,130742,"All eligible ETH-A draws, not a 1,000-event sample"
+Unique ETH-A urn addresses in final sample,16846,Vault-level identifiers; not verified real-world borrowers
+Clean single-draw repaid lifecycles,7947,Used only for observed-duration robustness

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">Path-Dependent Protocol Solvency</title>
+  <desc id="desc">Paper two of the Local-Currency DeFi Research Series</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0d0b20"/><stop offset="1" stop-color="#271229"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#fb7185"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="360" rx="24" fill="url(#bg)"/>
+  <circle cx="1120" cy="40" r="220" fill="#4c1d4f" opacity=".18"/><circle cx="985" cy="260" r="150" fill="#312e81" opacity=".2"/>
+  <rect x="56" y="43" width="296" height="32" rx="16" fill="#251438" stroke="#65468a"/>
+  <text x="76" y="64" fill="#c4b5fd" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.4">LOCAL-CURRENCY DEFI · PAPER 02/04</text>
+  <text x="56" y="128" fill="#f5f0ff" font-family="Arial, sans-serif" font-size="42" font-weight="800" letter-spacing="1">PATH-DEPENDENT</text>
+  <text x="56" y="179" fill="url(#accent)" font-family="Arial, sans-serif" font-size="47" font-weight="800">PROTOCOL SOLVENCY</text>
+  <text x="58" y="216" fill="#b5a8bd" font-family="Arial, sans-serif" font-size="17">Joint FX and crypto-collateral shock stress testing</text>
+  <g transform="translate(784 46)">
+    <circle cx="162" cy="108" r="93" fill="#130f27" stroke="#5c436f" stroke-width="2"/>
+    <path d="M89 134 A78 78 0 1 1 231 134" fill="none" stroke="#342b53" stroke-width="16" stroke-linecap="round"/>
+    <path d="M89 134 A78 78 0 0 1 207 53" fill="none" stroke="url(#accent)" stroke-width="16" stroke-linecap="round" filter="url(#glow)"/>
+    <line x1="162" y1="132" x2="210" y2="72" stroke="#f8fafc" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="162" cy="132" r="9" fill="#fb7185"/>
+    <text x="128" y="169" fill="#d8ccdf" font-family="Arial, sans-serif" font-size="12" font-weight="700">TAIL RISK</text>
+    <g fill="none" stroke-linecap="round">
+      <path d="M285 37 C319 70 268 95 310 128 S281 179 325 204" stroke="#a78bfa" stroke-width="3"/>
+      <path d="M311 30 C275 69 330 101 288 139 S327 181 293 216" stroke="#fb7185" stroke-width="3" opacity=".75"/>
+      <path d="M337 42 C304 81 349 107 322 146 S351 185 341 207" stroke="#f59e0b" stroke-width="2" opacity=".6"/>
+    </g>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="12" font-weight="700">
+    <text x="58" y="326" fill="#756680">01 DEBT EROSION</text><text x="253" y="326" fill="#5f5168">→</text>
+    <text x="286" y="326" fill="#a78bfa">02 SOLVENCY</text><text x="424" y="326" fill="#5f5168">→</text>
+    <text x="457" y="326" fill="#756680">03 PEG STABILITY</text><text x="615" y="326" fill="#5f5168">→</text>
+    <text x="648" y="326" fill="#756680">04 GOVERNANCE</text>
+  </g>
+</svg>

@@ -1,76 +1,115 @@
-# Local-currency DeFi solvency stress test
+<p align="center">
+  <img src="assets/series-banner.svg" alt="Path-Dependent Protocol Solvency — Local-Currency DeFi Research, Paper 2 of 4" width="100%">
+</p>
 
-Replication package for:
+<h1 align="center">From Debt Erosion to Protocol Solvency</h1>
 
-> *From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks*
+<p align="center">
+  <strong>Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks</strong><br>
+  Niko Rokni Lamouki · Salma Soofiyan · Amin Karami
+</p>
 
-Authors: Niko Rokni Lamouki, Salma Soofiyan, and Amin Karami. Corresponding author: `nrokni@uel.ac.uk`.
+<p align="center">
+  <img src="https://img.shields.io/badge/Research_Paper-02%2F04-a78bfa?style=flat-square" alt="Paper 2 of 4">
+  <img src="https://img.shields.io/badge/Simulation-20%2C000_paths-fb7185?style=flat-square" alt="20,000 paths">
+  <img src="https://img.shields.io/badge/Collateral-ETH_%C2%B7_BTC-f59e0b?style=flat-square" alt="ETH and BTC collateral">
+  <img src="https://img.shields.io/badge/Reproducible-Seed_20260810-334155?style=flat-square" alt="Seed 20260810">
+</p>
 
-The manuscript source is `manuscript/main.tex`; the compiled paper is `manuscript/main.pdf`.
+<p align="center">
+  <a href="manuscript/main.pdf"><strong>Read the paper</strong></a> ·
+  <a href="#reproduce"><strong>Reproduce the analysis</strong></a> ·
+  <a href="#research-series"><strong>Explore the series</strong></a>
+</p>
 
-## Research design
+---
 
-The package extends the companion debt-erosion paper from a terminal collateral screen to a monthly, path-dependent solvency model. It combines:
+## At a glance
 
-- 130,742 decoded MakerDAO ETH-A debt draws for portfolio calibration;
-- official ARS/USD and TRY/USD monthly averages from OECD Main Economic Indicators via FRED;
-- Coin Metrics ETH and BTC daily reference prices aggregated to month-end;
-- all realised 12-month windows from February 2020 through July 2023;
-- 20,000 three-month moving-block bootstrap paths per currency–collateral pair;
-- static and lagged FX-responsive borrowing rates;
-- collateral-ratio triggers, execution delay, auction haircuts, congestion, bad debt, reserve breach, and CVaR-consistent debt ceilings.
+| Research question | Empirical base | Main contribution |
+|---|---|---|
+| When does inflation-driven borrower relief become a solvency problem for the lending protocol? | MakerDAO debt-draw calibration, official ARS/TRY FX, and Coin Metrics ETH/BTC returns | A path-dependent engine that joins debt erosion, collateral liquidation, auction congestion, recovery, reserves, and CVaR-based debt ceilings |
 
-The system is hypothetical. The results are transparent design stresses, not realised user returns, a forecast, or evidence that an ARS- or TRY-pegged lending protocol has been implemented.
+> [!IMPORTANT]
+> The system is hypothetical. Results are conditional stress-test outputs—not realised borrower returns, forecasts of ARS/TRY or crypto prices, or evidence from a deployed local-currency lending protocol.
 
-## Main reproducibility anchors
+## Stress-test architecture
 
-- Joint monthly return observations: 42.
-- Realised 12-month windows per currency–collateral pair: 31.
-- Bootstrap paths per pair: 20,000.
-- Base block length: 3 months.
-- Random seed: `20260810`.
-- Adaptive 75% ARS/ETH mean bad debt, timely: 3.44% of principal.
-- Adaptive 75% TRY/ETH mean bad debt, timely: 3.21%.
-- Adaptive 75% ARS/ETH 99% CVaR, timely: 30.26%.
-- Adaptive 75% TRY/ETH 99% CVaR, timely: 25.75%.
+```mermaid
+flowchart TD
+  A[Joint FX + collateral paths] --> B[Debt and collateral state]
+  B --> C{Liquidation trigger}
+  C -->|No| D[Continue path]
+  C -->|Yes| E[Delay + auction haircut]
+  E --> F[Recovery or bad debt]
+  F --> G[Reserve breach + CVaR ceiling]
+```
 
-## Folder guide
+- **Historical calibration:** 130,742 MakerDAO ETH-A debt draws.
+- **Market inputs:** official ARS/TRY rates and daily ETH/BTC data resampled to month-end.
+- **Realised tests:** 31 rolling 12-month windows from February 2020 to July 2023.
+- **Bootstrap tests:** 20,000 paths per currency–collateral pair using 3-month moving blocks.
+- **Policy comparison:** static rates versus lagged, FX-responsive rates.
+- **Protocol mechanics:** collateral triggers, liquidation delay, auction haircuts, congestion, bad debt, reserves, and CVaR debt ceilings.
 
-- `analysis/`: input preparation and complete stress-test code.
-- `data/raw_fx/`: original official FRED CSV downloads.
-- `data/raw_prices/`: pinned Coin Metrics BTC and ETH analysis-window extracts (`time` and `PriceUSD`).
-- `data/processed/`: common monthly panel, MakerDAO sample construction, 100 principal-quantile bins, summaries, and checksums.
-- `results/`: all numerical outputs and validation checks.
-- `tables/`: machine-generated LaTeX table fragments.
-- `figures/`: eight generated 300-dpi figures.
-- `manuscript/`: English LaTeX source, figures, journal class files, and compiled PDF.
-- `documentation/`: provenance, equations, assumptions, and manuscript anchors.
+## Key findings
+
+| Validation anchor | Result |
+|---|---:|
+| Monthly return observations | 42 |
+| Realised 12-month windows per pair | 31 |
+| Bootstrap paths per currency–collateral pair | 20,000 |
+| Moving-block length | 3 months |
+| Reproducibility seed | `20260810` |
+| Adaptive 75% ARS/ETH — mean bad debt, timely liquidation | 3.44% |
+| Adaptive 75% TRY/ETH — mean bad debt, timely liquidation | 3.21% |
+| ARS/ETH — 99% CVaR, timely liquidation | 30.26% |
+| TRY/ETH — 99% CVaR, timely liquidation | 25.75% |
+
+The central result is path dependence: the same average depreciation can lead to materially different solvency outcomes once collateral shocks, liquidation timing, auction capacity, and recovery are allowed to interact.
+
+## Repository map
+
+| Path | Contents |
+|---|---|
+| [`analysis/`](analysis/) | Stress engine, policies, scenarios, and output generation |
+| [`data/`](data/) | Included inputs and processed datasets |
+| [`results/`](results/) | Machine-readable stress-test outputs |
+| [`tables/`](tables/) · [`figures/`](figures/) | Publication exhibits |
+| [`manuscript/`](manuscript/) | LaTeX source and compiled paper |
+| [`documentation/`](documentation/) | Data and replication notes |
 
 ## Reproduce
 
-Python 3.11 or later is recommended.
+The workflow targets **Python 3.11**.
 
 ```bash
 python -m pip install -r requirements.txt
 bash run_all.sh
 ```
 
-`run_all.sh` rebuilds the joint market panel, stress results, tables, figures, and PDF. The included principal calibration is sufficient because percentage stress outcomes are homogeneous in principal.
+The run regenerates the simulation results, tables, figures, and manuscript outputs. If the original event-level archive is available locally, pass it through the optional raw-data workflow documented in the repository.
 
-To rebuild the principal quantiles from the companion event-level file as well:
+## Data provenance
 
-```bash
-bash run_all.sh /path/to/makerdao_eth_a_draw_events_analysis.csv
-```
+- **MakerDAO:** public on-chain debt-draw activity used for calibration.
+- **ARS and TRY:** official OECD exchange-rate series accessed through FRED.
+- **ETH and BTC:** Coin Metrics Community market data.
 
-The event-level file and raw archive are documented in `documentation/SOURCES.md` and the companion repository:
+## Research series
 
-<https://github.com/nikorokni/inflation-driven-debt-erosion-defi>
+| Paper | Focus | Repository |
+|---:|---|---|
+| 01 | Inflation-driven debt erosion | [inflation-driven-debt-erosion-defi](https://github.com/nikorokni/inflation-driven-debt-erosion-defi) |
+| **02** | **Joint FX and collateral shocks → protocol solvency** | **You are here** |
+| 03 | Liquidity and arbitrage constraints → peg stability | [local-currency-defi-peg-stability](https://github.com/nikorokni/local-currency-defi-peg-stability) |
+| 04 | Oracle latency and automated controls → adaptive governance | [local-currency-defi-adaptive-governance](https://github.com/nikorokni/local-currency-defi-adaptive-governance) |
 
-## Licensing
+## Citation
 
-Analysis code and original text are released under the MIT License. Source data retain their original terms. Coin Metrics Community Data are distributed under CC BY-NC 4.0; the package preserves attribution and pinned analysis-window extracts. Users are responsible for checking whether their intended use is permitted.
+> Rokni Lamouki, N., Soofiyan, S., & Karami, A. (2026). *From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks.*
 
-## Repository
+## License
 
-<https://github.com/nikorokni/local-currency-defi-solvency-stress-test>
+Analysis code and original repository text are released under the MIT License. Third-party data remain subject to their source terms; Coin Metrics Community data are licensed under CC BY-NC 4.0.
+

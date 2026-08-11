@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks</strong><br>
-  Niko Rokni Lamouki · Salma Soofiyan · Amin Karami
+  Niko Rokni Lamouki · Salma Soofiyan
 </p>
 
 <p align="center">
@@ -107,9 +107,8 @@ The run regenerates the simulation results, tables, figures, and manuscript outp
 
 ## Citation
 
-> Rokni Lamouki, N., Soofiyan, S., & Karami, A. (2026). *From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks.*
+> Rokni Lamouki, N., & Soofiyan, S. (2026). *From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks.*
 
 ## License
 
 Analysis code and original repository text are released under the MIT License. Third-party data remain subject to their source terms; Coin Metrics Community data are licensed under CC BY-NC 4.0.
-

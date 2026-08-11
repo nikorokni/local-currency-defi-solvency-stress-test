@@ -8,8 +8,6 @@ authors:
     email: "nrokni@uel.ac.uk"
   - family-names: "Soofiyan"
     given-names: "Salma"
-  - family-names: "Karami"
-    given-names: "Amin"
 repository-code: "https://github.com/nikorokni/local-currency-defi-solvency-stress-test"
 date-released: 2026-08-10
 license: MIT

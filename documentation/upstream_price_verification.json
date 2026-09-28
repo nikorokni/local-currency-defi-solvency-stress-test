@@ -1,0 +1,16 @@
+[
+  {
+    "asset": "eth",
+    "url": "https://raw.githubusercontent.com/coinmetrics/data/f1a36afb962731c387bb03982758ab0103063da5/csv/eth.csv",
+    "status": "Archived extract matches pinned upstream daily prices",
+    "upstream_sha256": "46b18f3df967405374b1f6ee8a3d11ee1b7a5b176ac9fb4342caf6bf8648f2cc",
+    "rows": 1308
+  },
+  {
+    "asset": "btc",
+    "url": "https://raw.githubusercontent.com/coinmetrics/data/f1a36afb962731c387bb03982758ab0103063da5/csv/btc.csv",
+    "status": "Archived extract matches pinned upstream daily prices",
+    "upstream_sha256": "06495ff8e643432e6948b7b4686ce44fc106217287dabdc1b38351d9ddec46c3",
+    "rows": 1308
+  }
+]

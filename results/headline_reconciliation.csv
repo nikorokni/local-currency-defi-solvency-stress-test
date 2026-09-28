@@ -1,0 +1,9 @@
+currency,scenario,metric,raw_value,display_percent,locations,source
+ARS,ETH/adaptive_75/timely,expected_liquidated_exposure_share,0.414122002014,41.41,Abstract; tab:main; results,results/main_results.csv
+ARS,ETH/adaptive_75/timely,mean_bad_debt_ratio,0.0200278190552,2.00,Abstract; tab:main; results; conclusion,results/main_results.csv
+ARS,ETH/adaptive_75/timely,bad_debt_cvar_99,0.191820082157,19.18,Abstract; tab:main; results,results/main_results.csv
+ARS,ETH/adaptive_75/timely,reserve_breach_10pct,0.08055,8.05,tab:capital; results,results/main_results.csv
+TRY,ETH/adaptive_75/timely,expected_liquidated_exposure_share,0.42107850405,42.11,Abstract; tab:main; results,results/main_results.csv
+TRY,ETH/adaptive_75/timely,mean_bad_debt_ratio,0.0146209865341,1.46,Abstract; tab:main; results; conclusion,results/main_results.csv
+TRY,ETH/adaptive_75/timely,bad_debt_cvar_99,0.158075892427,15.81,Abstract; tab:main; results,results/main_results.csv
+TRY,ETH/adaptive_75/timely,reserve_breach_10pct,0.05145,5.15,tab:capital; results,results/main_results.csv

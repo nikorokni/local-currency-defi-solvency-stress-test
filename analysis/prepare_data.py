@@ -50,8 +50,9 @@ def read_coinmetrics_monthly(path: Path, output_name: str) -> pd.Series:
     frame["time"] = pd.to_datetime(frame["time"], errors="raise")
     frame["PriceUSD"] = pd.to_numeric(frame["PriceUSD"], errors="coerce")
     frame = frame.loc[frame["time"].between(START, END) & frame["PriceUSD"].notna()].copy()
-    # Last available daily reference price in each calendar month.
-    series = frame.set_index("time")["PriceUSD"].sort_index().resample("MS").last()
+    # Arithmetic average of available daily reference prices in each calendar month.
+    # Align monthly measurement convention with official monthly-average FX.
+    series = frame.set_index("time")["PriceUSD"].sort_index().resample("MS").mean()
     series.name = output_name
     return series
 
@@ -152,10 +153,12 @@ def main() -> None:
         checksums["external/makerdao_eth_a_draw_events_analysis.csv"] = event_checksum
 
     metadata = {
+        "measurement_convention": "monthly averages for FX and crypto; not synchronized executable quotes",
         "analysis_window": ["2020-01", "2023-07"],
         "monthly_level_observations": int(len(panel)),
         "joint_return_observations": int(panel[["ars_depreciation", "try_depreciation", "eth_return", "btc_return"]].dropna().shape[0]),
         "raw_file_sha256": checksums,
+        "makerdao_events_verified_this_run": args.makerdao_events is not None,
         "coinmetrics_repository_commit": "f1a36afb962731c387bb03982758ab0103063da5",
         "makerdao_source_repository_commit": "6f6710982391b88f48a3dc7bb5bbfecc7691a47f",
     }

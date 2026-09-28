@@ -1,0 +1,65 @@
+{
+  "seed": 20260928,
+  "paths": 20000,
+  "sensitivity_paths": 5000,
+  "outer_replicates": 100,
+  "inner_paths": 2000,
+  "horizon": 12,
+  "extension": 2,
+  "calibration_return_months": 42,
+  "input_sha256": {
+    "data/processed/input_metadata.json": "f898c5ddb4b907340641016c1aa08e51466b7ca660f7fe26e110bcd664c38bf8",
+    "data/processed/joint_monthly_market_panel.csv": "f9e73a61cd4f760f8c98ba391df638cddc056630719daab9fa101d48f4a84cfb",
+    "data/processed/portfolio_principal_quantiles.csv": "e388c54cde00898d058ce29dbbfcc729a6a1855b40bd712802d5df3478c58d02",
+    "data/processed/portfolio_principal_summary.json": "a3bd5081c44732cc331e20152263eb477c973fd0b42a77d0aa017020c53d71d4",
+    "data/processed/sample_construction.csv": "f6dea14975777c85916471d02ec1ac0be57c7daf88ca5430641408aaa517aed0",
+    "data/raw_fx/ars_usd_fred.csv": "1dacf0b03e50660e0bbd819e3b73f6783576517a8d0cf9ac2559dbb92d0f455d",
+    "data/raw_fx/try_usd_fred.csv": "51d90a2eb45a989dcc078e04dacfcb06637026e90a3ead8d8290e8a61a32aad4",
+    "data/raw_prices/coinmetrics_btc.csv": "d8534df0ef2a8435e414f201c1081773ec5b07a7e20c7cf19fef1183758d5d79",
+    "data/raw_prices/coinmetrics_eth.csv": "2c4588fac04c67a4f237054e24f63d8e78ef71f41f4edf5be44ccb3179649237"
+  },
+  "numpy_version": "2.3.5",
+  "pandas_version": "2.2.3",
+  "rate_rules": [
+    "static_20",
+    "adaptive_75",
+    "indexed_100",
+    "smooth_12",
+    "partial_adjust",
+    "lower_cap"
+  ],
+  "mechanisms": [
+    {
+      "name": "timely",
+      "delay": 0,
+      "haircut": 0.08,
+      "congestion": 0.2,
+      "penalty": 0.13,
+      "haircut_cap": 0.3
+    },
+    {
+      "name": "delay_only",
+      "delay": 1,
+      "haircut": 0.08,
+      "congestion": 0.2,
+      "penalty": 0.13,
+      "haircut_cap": 0.3
+    },
+    {
+      "name": "haircut_only",
+      "delay": 0,
+      "haircut": 0.15,
+      "congestion": 0.2,
+      "penalty": 0.13,
+      "haircut_cap": 0.3
+    },
+    {
+      "name": "delayed_stress",
+      "delay": 1,
+      "haircut": 0.15,
+      "congestion": 0.2,
+      "penalty": 0.13,
+      "haircut_cap": 0.3
+    }
+  ]
+}

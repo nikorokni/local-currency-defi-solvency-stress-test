@@ -1,550 +1,250 @@
-%!TEX TS-program = pdflatex
-\PassOptionsToPackage{a4paper,margin=1in}{geometry}
-\documentclass[sn-vancouver,Numbered]{sn-jnl}
-
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage{multirow}
-\usepackage{tabularx}
-\usepackage{threeparttable}
-\usepackage{url}
-\usepackage{xcolor}
-
-\hypersetup{
-  pdftitle={From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks},
-  pdfauthor={Niko Rokni Lamouki; Salma Soofiyan},
-  pdfsubject={Dynamic solvency stress testing for hypothetical local-currency DeFi lending},
-  pdfkeywords={decentralized finance, local-currency stablecoins, stress testing, liquidation, bad debt, reserves, MakerDAO}
-}
-
-\newcommand{\usd}{\mathrm{USD}}
-\newcommand{\lcu}{\mathrm{LCU}}
-\newcommand{\CVaR}{\operatorname{CVaR}}
-
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=24mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,amssymb,booktabs,tabularx,longtable,graphicx}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Local-Currency DeFi Lending under Joint FX and Crypto Shocks: A Path-Dependent Credit-Loss Stress Test},pdfauthor={Niko Rokni Lamouki; Salma Soofiyan}}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{enumitem,float}
+\setlength{\emergencystretch}{2em}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+\raggedbottom
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\ind}{\mathbf{1}}
+\input{../tables/numbers}
+\title{Local-Currency DeFi Lending under Joint FX and Crypto Shocks:\\A Path-Dependent Credit-Loss Stress Test}
+\author{Niko Rokni Lamouki\thanks{Corresponding author: \texttt{nrokni@uel.ac.uk}.}\quad Salma Soofiyan\\[3pt]\small School of Architecture, Computing and Engineering\\\small University of East London, London E16 2RD, United Kingdom}
+\date{Revised manuscript -- 28 September 2026}
 \begin{document}
-
-\title[Path-Dependent Solvency Stress Testing]{From Debt Erosion to Protocol Solvency: Path-Dependent Stress Testing of Local-Currency DeFi Lending under Joint FX and Crypto-Collateral Shocks}
-
-\author*[1]{\fnm{Niko} \sur{Rokni Lamouki}}
-\email{nrokni@uel.ac.uk}
-\author[1]{\fnm{Salma} \sur{Soofiyan}}
-
-\affil*[1]{\orgdiv{School of Architecture, Computing and Engineering},
-\orgname{University of East London},
-\orgaddress{\street{Docklands Campus}, \city{London}, \postcode{E16 2RD},
-\country{United Kingdom}}}
-
-\abstract{Borrowing in a depreciating local-currency unit can reduce a borrower's US-dollar-equivalent repayment burden, but that observation does not establish that an overcollateralised lending protocol remains solvent. We develop a path-dependent stress-testing framework for hypothetical Argentine-peso (ARS) and Turkish-lira (TRY) DeFi debt collateralised by ETH or BTC. The calibration combines 130,742 public MakerDAO ETH-A debt-draw events, official monthly OECD/FRED exchange rates, and Coin Metrics daily reference prices aggregated to month-end from January 2020 to July 2023. We replay every realised 12-month window and generate 20,000 joint paths per currency--collateral pair using a three-month moving-block bootstrap. The model endogenises debt growth under static and lagged FX-responsive rate rules, collateral-ratio breaches, liquidation delay, auction haircuts, congestion, bad debt, reserve breach, and a conditional borrower benefit. Under the base initial-collateral distribution, a 150\% liquidation threshold, and timely liquidation, the 75\%-pass-through adaptive rule produces expected liquidated-exposure shares of 48.90\% for ARS/ETH and 47.96\% for TRY/ETH. Mean bad debt is 3.44\% and 3.21\% of principal; the corresponding 99\% conditional tail losses are 30.26\% and 25.75\%. A one-month execution delay combined with a 15\% auction haircut raises mean bad debt to 5.39\% and 4.76\%. Static 20\% pricing preserves a positive borrower-side benefit after modelled liquidation penalties, whereas both adaptive rules remove that benefit and increase liquidation pressure by raising debt service. The result is a design trilemma: a protocol cannot simultaneously preserve large depreciation-driven borrower gains, fully index rates to currency weakness, and maintain low liquidation and reserve risk under volatile collateral. The estimates are transparent design stresses, not forecasts or evidence from an implemented ARS- or TRY-denominated protocol.}
-
-\keywords{Decentralized finance, local-currency stablecoins, stress testing, foreign exchange, crypto collateral, liquidation, bad debt, reserve capital}
-
 \maketitle
+\begin{abstract}
+Local-currency depreciation can reduce the USD repayment burden of debt without establishing the safety of a lending protocol. We develop a reproducible counterfactual credit-loss stress test for Argentine-peso (ARS) and Turkish-lira (TRY) lending backed by ETH or BTC. Empirical market inputs comprise 42 joint monthly returns, constructed from official monthly-average exchange rates and monthly averages of daily crypto reference prices over January 2020--July 2023. The initial collateral distribution, auction frictions, rate policies and funding architecture are illustrative assumptions, not observed local-currency lending conditions. Under a three-month moving-block bootstrap, the baseline adaptive rule and timely auctions produce expected liquidated-exposure shares of \ArsLiq{} for ARS/ETH and \TryLiq{} for TRY/ETH. Mean credit losses are \ArsLoss{} and \TryLoss{} of initial principal; 99\% conditional value-at-risk (CVaR) is \ArsTail{} and \TryTail{}. Close-out extensions prevent delayed liquidations from disappearing at the horizon. Principal-weight ablations show that MakerDAO draw sizes serve a scale illustration rather than percentage-loss calibration. Within the tested policy grid, rate pass-through trades off financing-side debt relief against liquidation and credit loss. Results depend materially on monthly measurement, the short calibration sample and auction assumptions. Credit-budget exhaustion, a stylized matched-funding accounting deficit and stablecoin redemption failure are distinct outcomes; this study does not forecast peg stability or establish protocol viability.
+\end{abstract}
+\textbf{Keywords:} DeFi; local-currency debt; credit loss; liquidation; foreign exchange; counterfactual stress testing.
 
-\section{Introduction}\label{sec:introduction}
+\section{Introduction}
+Collateralised decentralized-finance lending combines a loan claim, pledged crypto collateral and a token or funding obligation. Smart-contract accounting makes these links explicit, but does not eliminate credit, liquidity or governance risks \cite{Schar2021,Werner2022,MakerVatDocs}. A local-currency unit adds an important distinction: depreciation against USD reduces the translated value of both an LCU loan and a matching LCU liability. It is therefore incorrect to infer a protocol loss directly from a borrower's USD debt erosion.
 
-Overcollateralised decentralized-finance (DeFi) lending replaces unsecured credit assessment with observable collateral, programmable interest, price oracles, and automatic liquidation \cite{Schar2021,Werner2022}. Most large lending protocols denominate obligations in USD-linked assets. A local-currency stablecoin would change the economic mechanism: when the liability unit depreciates against the dollar while collateral remains dollar-linked or crypto-denominated, the USD value of the debt may fall. The companion event-level counterfactual documents that this channel can be material before liquidation, but it deliberately leaves within-horizon collateral paths, auction execution, oracle delay, and protocol loss absorption unresolved \cite{RokniLamouki2026}.
+We study a hypothetical architecture in which the protocol advances one LCU loan funded by an equal, non-interest-bearing LCU token liability. One token promises one LCU, not one USD. The loan accrues interest, while the original funding principal does not. Crypto collateral remains pledged borrower property until sale; it must not also be counted as an unencumbered protocol asset. USD reserves supplied by equity investors absorb a settlement deficit. If those reserves are inadequate, the model reports an unfunded accounting gap; it does not assume successful governance-token issuance or peg restoration. Redemption is assumed to coincide with loan settlement at the model FX rate. On-demand redemption, runs and executable exchange-market access are outside this stylized funding diagnostic.
 
-Those omissions are economically central. Debt erosion is a transfer, not a free return. A borrower benefits only if financing costs and liquidation losses do not dominate depreciation. A protocol is viable only if collateral recoveries, reserves, pricing, and debt ceilings absorb losses during correlated currency and crypto stress. Raising rates may protect the protocol from currency depreciation in accounting terms, yet it also increases the debt balance, pushes marginal positions toward liquidation, and can amplify collateral sales. Liquidation itself is not frictionless: empirical studies document discounted collateral disposal, liquidator concentration, and links between liquidation activity and subsequent volatility \cite{Qin2021Liquidations,SasiBrodesky2023,Perez2021}.
+\textbf{Primary estimand and unit.} The primary estimand is expected cumulative contractual credit loss after collateral recovery, divided by initial USD principal, for a synthetic currency--collateral portfolio over a 12-month origination horizon plus any scheduled liquidation close-out. A unit of simulation is one joint market path applied to an assumed distribution of initial collateral ratios (CRs), not an observed MakerDAO borrower.
 
-This paper asks four questions:
-\begin{description}
-  \item[RQ1] How often do joint historical FX and crypto-collateral paths cause liquidation in a hypothetical ARS- or TRY-denominated vault portfolio?
-  \item[RQ2] How do static and lagged FX-responsive borrowing-rate rules change borrower debt erosion, liquidated exposure, and protocol bad debt?
-  \item[RQ3] How strongly do execution delay, auction haircuts, congestion, collateral thresholds, and path-dependence affect reserve adequacy and safe debt ceilings?
-  \item[RQ4] Which combinations of borrower benefit and protocol protection remain feasible under transparent, reproducible stress assumptions?
-\end{description}
+The questions are how lagged rate policies alter debt growth and liquidation, how auction frictions and collateral buffers change losses, and how much these outcomes vary with market measurement and calibration. The contribution is an integrated, reproducible accounting experiment. It combines monthly first-breach rules with explicit delayed settlement, a proceeds waterfall, separate survivor and liquidated-borrower measures, and matched-liability diagnostics. It makes no universal impossibility claim and provides no regulatory capital recommendation.
 
-The paper contributes a complete low-frequency design stress test rather than another terminal-shock screen. First, it preserves the observed joint sequence of monthly local-currency depreciation and crypto returns through a moving-block bootstrap. Second, it models the debt and collateral ratio at every month and records the first breach. Third, it links simultaneous liquidation to an endogenous auction haircut and allocates residual shortfall to protocol reserves. Fourth, it reports borrower and protocol outcomes together, exposing the trade-off created by rate indexation. Fifth, it provides all source snapshots, checksums, code, tables, figures, validation anchors, and a one-command reproduction workflow.
+\section{Related literature and incremental contribution}
+Empirical DeFi lending studies establish that rates, utilization and borrower activity are state-dependent \cite{Gudgeon2020Funds,Saengchote2023,Cornelli2025}. Liquidation studies show that collateral thresholds and execution incentives matter, and that observed liquidations interact with market liquidity and price volatility \cite{Qin2021Liquidations,Perez2021,SasiBrodesky2023}. Evidence on MakerDAO resilience and oracle design motivates attention to collateral valuation and execution \cite{Kjaer2021,Eskandari2021}. These results justify modelling frictions; they do not identify the numerical haircut or congestion coefficient for a hypothetical ARS or TRY protocol.
 
-The principal finding is not that one rate rule dominates. Under the calibrated stress distribution, higher FX pass-through removes the depreciation subsidy but raises debt service quickly enough to increase liquidated exposure. Auction congestion is a first-order loss driver: removing the congestion component reduces mean bad debt under the adaptive ARS/ETH design from about 3.4\% to about 0.7\%. Conversely, delay and a stressed haircut sharply increase tail loss. Solvency therefore depends on a joint policy vector---rates, collateral buffers, auction capacity, reserves, and debt ceilings---rather than a single inflation-linked price.
+Stablecoin research distinguishes backing from secondary-market stability: arbitrage, endogenous collateral dynamics and redemption institutions all matter \cite{Lyons2023,KlagesMundt2022,GortonZhang2023}. A credit-loss calculation cannot replace a run model. Emerging-market research highlights currency substitution and financial-stability exposures \cite{BIS2023,Copestake2023}. Evidence connecting stablecoin flows and FX markets further motivates treating official FX as a reference unit rather than a guaranteed conversion price \cite{Aldasoro2026}.
 
-\section{Related Literature and Research Gap}\label{sec:literature}
+Table~\ref{tab:gap} selects representative works for their relevance to a particular model channel, not as an exhaustive review of each field. The novelty is the integration and auditability of those channels under local-currency denomination, not the invention of liquidation stress testing, bootstrap inference or stablecoin balance-sheet accounting.
+\begin{table}[H]\centering\small
+\caption{Representative literature and the boundary of this experiment.}\label{tab:gap}
+\begin{tabularx}{\linewidth}{p{25mm}XX}\toprule
+Channel & Established contribution & Increment here / omitted mechanism\\\midrule
+Lending \cite{Gudgeon2020Funds,Cornelli2025} & Empirical rates, usage and liquidity & Compare specified LCU rate rules; demand is fixed.\\
+Liquidation \cite{Qin2021Liquidations,Perez2021,SasiBrodesky2023} & Threshold exposure and execution frictions & Joint FX--crypto paths with scheduled close-out; no order book.\\
+Stablecoins \cite{Lyons2023,KlagesMundt2022,GortonZhang2023} & Arbitrage, backing and redemption fragility & Separate loan recovery from funding; no endogenous peg/run.\\
+Emerging-market FX \cite{BIS2023,Copestake2023,Aldasoro2026} & Currency substitution and market segmentation & Explicit reference FX numeraire; no parallel-rate estimate.\\\bottomrule
+\end{tabularx}\end{table}
 
-\subsection{DeFi lending, rates, and liquidation}
+\textbf{Relationship to the companion paper.} The companion working paper \cite{RokniLamouki2026} decodes MakerDAO ETH-A draws and evaluates fixed-horizon debt erosion. The present study reuses its event eligibility rules, principal summary and 100 quantile bins, plus the official FX snapshots; these are not new data collection. The basic USD translation identity is also shared. New analysis consists of the joint FX--crypto return panel, monthly rate and collateral paths, liquidation and close-out accounting, funding bridge, CR and auction sensitivity, and sampling diagnostics. Results here are freshly simulated, not the companion paper's event-level estimates. The 130,742 draws are neither 130,742 independent return observations nor observed LCU loans.
 
-DeFi lending pools automate collateralised credit and interest-rate adjustment but remain exposed to leverage, liquidity, governance, and oracle risk \cite{Schar2021,Gudgeon2020Funds,Werner2022}. Empirical evidence from Compound and Aave shows heterogeneous users and state-dependent borrowing activity \cite{Saengchote2023,Cornelli2025}. Liquidation research demonstrates that discounted collateral sales can protect lenders while imposing losses on borrowers and interacting with market liquidity \cite{Qin2021Liquidations,SasiBrodesky2023}. MakerDAO-specific evidence also shows that resilience depends on collateral composition and timely deleveraging \cite{Kjaer2021}.
+\section{Accounting architecture and notation}
+\subsection{Balance sheet and loss definitions}
+Let $E_t$ be LCU per USD and $P_0$ initial USD principal. Funding tokens have face value $P_0E_0$ LCU, so their USD value before retirement is $P_0E_0/E_t$. Accrued loan assets are larger by contractual interest. Table~\ref{tab:balance} prevents double counting of collateral and reserves.
+\begin{table}[H]\centering\small
+\caption{Illustrative balance sheet before settlement. Values shown for one loan; no claim is made that this is an implemented protocol.}\label{tab:balance}
+\begin{tabularx}{\linewidth}{p{28mm}p{26mm}X}\toprule
+Item & Native unit & USD treatment and ownership\\\midrule
+Loan asset & LCU & Accrued claim $P_0U_t/X_t$, before credit impairment.\\
+Funding/token liability & LCU & Non-interest-bearing face value $P_0/X_t$; one token redeems for one LCU at settlement.\\
+Pledged crypto & ETH or BTC & $P_0c_jZ_t$; borrower property securing the loan, not an additional unencumbered asset.\\
+Liquid reserves & USD & $kP_0$ initially, with $k=0.10$ in funding diagnostics.\\
+Equity & Residual USD value & Reserves plus accrued net interest less impairment; absorbs losses first.\\
+Governance backstop & None credited & No token-sale proceeds, guarantees or recapitalization are assumed.\\\bottomrule
+\end{tabularx}\end{table}
 
-This literature primarily studies USD-linked or crypto-denominated debt. It does not jointly model a depreciating fiat liability unit, adaptive nominal rates, crypto collateral, auction loss, and reserve capital. That combination matters because currency depreciation reduces the USD debt balance while rate indexation raises it.
+Five concepts must be separated. (i) Contractual credit loss is debt minus loan recovery. (ii) FX translation changes the USD loan value. (iii) Matching token liabilities translate with the same FX factor, offsetting the principal component. (iv) Peg or redemption shortfall also depends on timing, liquidity and market conversion; it is not estimated here. (v) Overall protocol insolvency would require all assets and obligations, valuation rules and contingent liabilities. We therefore use \emph{credit loss} throughout and reserve the term \emph{accounting gap} for the deliberately restricted funding ledger.
 
-\subsection{Stablecoins, emerging markets, and FX transmission}
+\subsection{Variables and units}
+\begin{table}[H]\centering\small
+\caption{Notation. All lower-case monetary outcomes are normalized by their own initial USD principal; portfolio weights sum to one.}\label{tab:notation}
+\begin{tabularx}{\linewidth}{p{28mm}X}\toprule
+Symbol & Definition / unit\\\midrule
+$s,j,b,t$ & Market path, collateral cohort, principal bin, and month indices.\\
+$N,T,d,\tau_j$ & Number of paths; $T=12$ origination months; execution delay in months; first breach month.\\
+$E_t,P_t,X_t,Z_t$ & LCU/USD FX level; USD/crypto price; factors $X_t=E_t/E_0$, $Z_t=P_t/P_0^{\rm crypto}$.\\
+$\delta_t,g_t,r_t,U_t$ & FX depreciation return; crypto return; nominal annual borrowing rate; cumulative LCU debt factor.\\
+$c_j,w_j,\theta$ & Initial CR; initial-principal exposure weight; liquidation CR threshold.\\
+$q_t,h_0,\gamma,h_{s,t},\bar h$ & Initial-exposure share sold in month $t$; base haircut; congestion slope; effective haircut; haircut cap.\\
+$D_{sjt},C_{sjt},a_{sj}$ & Debt and collateral in USD per initial USD; auction proceeds at settlement.\\
+$R_{sj},L_{sj},\pi_{sj},V_{sj}$ & Debt recovery, credit loss, collectible penalty, and returned collateral value per initial USD.\\
+$e_{sj},b_{sj},k,K_{s,t}$ & Settlement month; financing-side net debt effect; initial reserve ratio; settlement capital ledger per initial portfolio USD.\\
+$\ell_s,\alpha,\mathrm{CVaR}_{.99}$ & Portfolio loss ratio; tail probability $\alpha=.01$; mean of worst 1\% of simulated losses.\\\bottomrule
+\end{tabularx}\end{table}
 
-Stablecoin prices depend on arbitrage access, backing, liquidity, and legal redemption arrangements \cite{Lyons2023,KlagesMundt2022,GortonZhang2023}. Stablecoins can offer access to dollar exposure in emerging markets but may also create currency substitution and macro-financial spillovers \cite{Auer2023,Copestake2023}. Recent BIS evidence documents persistent differences between stablecoin-implied and traditional FX prices and causal spillovers from stablecoin flows to spot exchange rates and dollar funding conditions \cite{Aldasoro2026}. These findings make official FX data a transparent reference, but not necessarily an executable price for every user.
+\subsection{Debt and liquidation equations}
+For monthly returns $\delta_t$ and $g_t$, and a nominal annual rate $r_t$, the explicit recursions are
+\begin{align}
+X_t&=X_{t-1}(1+\delta_t),&Z_t&=Z_{t-1}(1+g_t),\\
+U_t&=U_{t-1}(1+r_t/12),&U_0&=X_0=Z_0=1,\\
+D_{sjt}&=U_{s,t}/X_{s,t},&C_{sjt}&=c_jZ_{s,t},\qquad CR_{sjt}=C_{sjt}/D_{sjt}.
+\end{align}
+The rate convention is nominal annual divided by 12, not effective annual compounding. First breach uses the strict inequality $CR<\theta$. A breach in months 1--12 is irrevocable and schedules full collateral sale in month $\tau_j+d$, even if the CR later recovers. Interest accrues until execution. Unbreached positions repay in month 12. No new loans or breaches are originated after month 12; months 13--14 only close scheduled sales.
 
-A local-currency stablecoin reverses the usual dollarisation narrative at the unit-of-account level, yet it does not remove FX risk. If the protocol's loan asset and token liability are in LCU while reserves and collateral are in USD or crypto, every pricing and liquidation decision becomes a multi-numeraire balance-sheet problem. The model below isolates that problem without assuming that a live peg, redemption market, or legal structure already exists.
+For exposure sold in month $t$, $q_{s,t}=\sum_jw_j\ind(e_{sj}=t,\tau_j\leq12)$, and
+\begin{align}
+h_{s,t}&=\min(\bar h,h_0+\gamma q_{s,t}),\quad \bar h=0.30,\\
+a_{sj}&=(1-h_{s,e_{sj}})C_{sj,e_{sj}},\\
+R_{sj}&=\min(D_{sj,e_{sj}},a_{sj}),\quad L_{sj}=D_{sj,e_{sj}}-R_{sj},\\
+\pi_{sj}&=\min(0.13D_{sj,e_{sj}},[a_{sj}-D_{sj,e_{sj}}]_+),\\
+V_{sj}&=[a_{sj}-D_{sj,e_{sj}}-\pi_{sj}]_+.
+\end{align}
+Here $[x]_+=\max(x,0)$. Penalty is paid to the protocol only from proceeds remaining after loan recovery; it cannot increase loan recovery above debt or create a fictitious cash receipt. The auction haircut represents value lost to execution frictions or auction participants. For survivors, $R=D$, $L=\pi=h=0$, and collateral remains with the borrower. The liquidation waterfall satisfies $a=R+\pi+V$ exactly.
 
-\subsection{Stress testing and unresolved design question}
-
-Traditional stress testing evaluates losses under adverse but coherent paths and compares them with loss-absorbing resources. Applying this logic to DeFi requires programmatic trigger rules and liquidation mechanics, not only terminal asset shocks. Prior work shows how small price changes can make large balances liquidable and how oracle or market frictions can worsen the transition from collateral decline to realised recovery \cite{Perez2021,Eskandari2021}. The unresolved question is whether the borrower's depreciation advantage survives a policy rule that also keeps the protocol's tail loss within a stated capital budget.
-
-\begin{table*}[t]
-\centering
-\caption{Research-gap matrix.}\label{tab:gap}
-\small
-\begin{tabularx}{\textwidth}{p{2.6cm}p{2.5cm}p{2.2cm}p{2.2cm}X}
-\toprule
-Literature & Primary outcome & Path-dependent collateral & Local-currency debt & Missing link \\
-\midrule
-DeFi lending \cite{Gudgeon2020Funds,Cornelli2025} & Usage, rates, liquidity & Partial & No & FX-denominated debt service \\
-Liquidation \cite{Qin2021Liquidations,SasiBrodesky2023} & Liquidation and market impact & Yes & No & Joint FX--collateral paths \\
-Stablecoins \cite{Lyons2023,KlagesMundt2022} & Peg and backing & Limited & Usually USD & Vault-level solvency \\
-Emerging markets \cite{Auer2023,Aldasoro2026} & Adoption and FX spillovers & No & Yes & On-chain collateral mechanics \\
-This paper & Bad debt, reserves, borrower benefit & Yes, monthly & Counterfactual ARS/TRY & No claim of live-protocol validation \\
-\bottomrule
-\end{tabularx}
-\end{table*}
-
-\section{System Architecture and Balance-Sheet Logic}\label{sec:architecture}
-
-The hypothetical system accepts ETH or BTC collateral and issues debt in a stablecoin targeted to one unit of ARS or TRY. The model starts with one dollar of principal, so all losses and benefits are directly interpretable as ratios. The observed MakerDAO draw distribution is used to describe and scale a synthetic portfolio; because the stress equations are homogeneous in principal, percentage outcomes are unchanged by the chosen portfolio size.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.96\textwidth]{figures/figure1_framework.png}
-\caption{Path-dependent stress-testing architecture. Observed inputs determine joint paths; policy rules update debt; the liquidation engine maps threshold breaches into recoveries; borrower and protocol outcomes are reported from the same paths.}\label{fig:framework}
-\end{figure*}
-
-Let $E_t$ be LCU units per USD, so an increase is local-currency depreciation. Let $P_t$ be the USD collateral price, $D_t^{LCU}$ nominal debt, and $i_t$ the annual nominal borrowing rate applied during month $t$. For an initial USD-equivalent principal $D_0$, the USD debt factor is
+The financing-side net debt effect is
 \begin{equation}
- d_t \equiv \frac{D_t^{USD}}{D_0}
- = \frac{\prod_{m=1}^{t}(1+i_m/12)}{E_t/E_0}.
- \label{eq:debt}
+b_{sj}=1-\left(R_{sj}+\pi_{sj}+h_{s,e_{sj}}C_{sj,e_{sj}}\right).
 \end{equation}
-Currency depreciation lowers $d_t$; a higher rate raises it. If the initial collateral ratio is $c_0$, the collateral ratio at $t$ is
+For liquidation this equals $1-C+V$; for survival it is $1-D_{sj,12}$. It measures normalized initial financing proceeds less resources surrendered in settlement, including auction friction. It excludes pre-sale collateral investment returns, taxes, conversion costs, peg deviations, discounting, post-settlement reinvestment and borrowing utility. Default can reduce repayment, so it is not a welfare, profit or general borrower-benefit measure. Liquidated and surviving positions have different holding periods; we report both separately.
+
+\subsection{Funding and reserve diagnostics}
+Gross portfolio credit loss is $\ell_s=\sum_j w_jL_{sj}$. Its credit-budget indicator is $\ind(\ell_s>k)$, not an insolvency event. In the separate matched-funding diagnostic, outstanding principal liabilities are retired at each position's settlement FX rate. The cash-capital ledger is
 \begin{equation}
- CR_t = \frac{c_0(P_t/P_0)}{d_t}.
- \label{eq:cr}
+K_{s,t}=k+\sum_{j:e_{sj}\leq t}w_j\left(R_{sj}+\pi_{sj}-X_{s,e_{sj}}^{-1}\right).
 \end{equation}
-The first month with $CR_t<\theta$ is the breach month $\tau$. Execution occurs at $\tau+\delta$, where $\delta$ is the oracle/operational delay. If the breach is too late for execution inside the horizon, any actual collateral shortfall at maturity remains a protocol loss.
+Equivalently, each settled contribution is $(U-1)/X-L+\pi$. Thus the loan and liability principal translation cancels; interest is not assumed to offset loss until actually recovered. A negative ledger flags a funding gap, even if it later recovers. Negative balances are recorded as unfunded gaps, not assumed external borrowing. Before all loans settle, this cash ledger is not total marked-to-market equity; unrealized loan surplus is excluded. After all settlement it equals residual equity for this restricted architecture. USD conversion at official reference FX and synchronized liability maturity are strong assumptions. Early token redemption, liquidity runs, operational costs and endogenous token prices are not simulated.
 
-The auction recovery haircut responds to the fraction $L_t$ of portfolio exposure liquidated in the same month:
+\section{Data, construction and parameter provenance}
+\subsection{Market observations and alignment}
+Archived OECD/FRED ARS and TRY monthly-average series provide LCU per USD \cite{FREDARS,FREDTRY}. Coin Metrics daily \texttt{PriceUSD} observations are averaged within each calendar month \cite{CoinMetricsData}. There are 43 level observations, January 2020--July 2023, yielding 42 returns. This revision replaces the original mixture of monthly-average FX and month-end crypto. Both main series now use monthly averages, although business-day FX and calendar-day crypto sampling are not identical. These are low-frequency reference marks, not simultaneous executable prices; monthly averaging also suppresses intramonth extremes.
+
+Official rates may differ substantially from accessible conversion prices, especially under Argentine exchange controls. No parallel-rate observations are invented or substituted. This is an official-rate counterfactual, and its conclusions should not be interpreted as returns achievable by an Argentine retail borrower. The archived analysis period is held fixed for traceability. Subperiods and leave-one-year-out analyses test sample dependence; a longer modern sample remains a distinct future data extension.
+\begin{figure}[H]\centering\includegraphics[width=\linewidth]{../figures/market_averages.pdf}
+\caption{Monthly-average FX and crypto price factors. LCU means local-currency units. Each series is normalized to its January 2020 level; these are observed reference prices, not simulated loan outcomes.}\end{figure}
+
+\subsection{MakerDAO principal ablation}
+The companion package derives 130,742 eligible ETH-A debt draws from a public MakerDAO dataset \cite{Chaleenutthawut2024,RokniLamouki2026}. This revision uses its archived 100 principal-bin summaries as an inherited scale and concentration illustration. Raw blockchain decoding was not repeated for this revision. The input-preparation script can rebuild those summaries from the documented companion event file and verifies its checksum when supplied.
+
+Let $v_b$ be the principal share of bin $b$ and $w_j$ the assumed CR exposure weight. The synthetic product portfolio has weights $v_bw_j$ across $100\times31=3,100$ cells. Principal size is assumed independent of CR and market path; all dollar amounts scale linearly and congestion depends on a share. Therefore for any normalized cohort outcome $f_j$,
 \begin{equation}
- h_t=\min\{0.30,\ h_0+\gamma L_t\}.
- \label{eq:haircut}
+\sum_b\sum_jv_bw_j f_j=\sum_j w_j f_j,\qquad \sum_b v_b=1.
 \end{equation}
-For a position executed at $s$, bad debt per initial dollar is
+This is exact scale homogeneity under the stated model, not empirical evidence that size never matters. Dollar-dependent slippage or correlated size and leverage would break it.
+
+Table~\ref{tab:ablation} runs MakerDAO weights, equal principal bins and one normalized unit per CR quadrature point retaining $w_j$. It additionally implements the literal alternative of one dollar at each of the 31 CR points. The latter makes the CR distribution uniform, so any percentage change is a collateral-weight change, not an effect of MakerDAO draw sizes.
+\begin{table}[H]\centering\small
+\caption{Principal ablation: ETH, adaptive rule, timely auction, common paths. Liquidated exposure, mean credit loss and CVaR$_{99}$ are percentages of initial principal.}\label{tab:ablation}
+\input{../tables/ablation}\end{table}
+
+\subsection{Parameters and provenance}
+No auction parameter is presented as empirically estimated. Four provenance classes distinguish observations, external methodological inputs, inherited protocol conventions, and illustrative numerical choices. Table~\ref{tab:parameters} contains the full numerical policy specification; constants also appear in executable code.
+\begin{table}[H]\centering\small
+\caption{Parameter provenance. ``Inherited convention'' means a design pattern, not a verified deployment-specific parameter.}\label{tab:parameters}
+\begin{tabularx}{\linewidth}{p{24mm}p{39mm}X}\toprule
+Class & Input / value & Interpretation and source\\\midrule
+Directly observed & 43 monthly levels; 42 returns & Archived FRED FX and Coin Metrics daily prices, aggregated to monthly averages.\\
+External source & Block resampling; MakerDAO bin summaries & Dependence-respecting resampling \cite{Kunsch1989}; inherited draw-size summary \cite{Chaleenutthawut2024,RokniLamouki2026}, not an LCU calibration.\\
+Inherited protocol convention & Collateralized debt, accrued rates, liquidation accounting & Motivated by Maker/Sky core accounting \cite{MakerVatDocs}; this implementation is not a reproduction of its contracts.\\
+Illustrative & CR 1.50--2.25, 31 points; triangular mode 1.75 & Endpoints assigned positive mass $10^{-6}$ before normalization. Alternatives: uniform; density $\exp[-8(c-1.5)]$; uniform 2--3 buffered grid.\\
+Illustrative & Threshold 1.50; penalty 0.13 & Carried over as design assumptions; no historical calibration claimed.\\
+Illustrative & Haircut 0.08; slope 0.20; cap 0.30 & Joint grid: base haircut 0.05/0.08/0.15, slope 0/0.20/0.40, delay 0/1/2 months, all four CR distributions.\\
+Illustrative & Reserve 0.10; 12-month horizon & Zero reserve yield; liability principal retires at loan settlement. Extension up to two months.\\
+Illustrative & Rate floor 0.05; initial rate 0.20 & Coefficients, caps and adjustment rules are specified below; not estimated optimal policies.\\
+Numerical choice & 20,000 main paths; block length 3 & Seed 20260928 with deterministic currency/asset offsets; 5,000 common paths for each joint-grid cell; 100 outer replicates, 2,000 inner paths.\\\bottomrule
+\end{tabularx}\end{table}
+
+\section{Stress-test design and event order}
+The main bootstrap samples joint FX--crypto pairs in non-circular blocks of three consecutive observations. Starting indices are uniform over $0,\ldots,n-B$; blocks that extend beyond the historical sample are never eligible. Blocks are concatenated and the final partial block is truncated to 14 months. The same 14-month paths are used for all rate and auction comparisons within a currency--collateral pair. No path extension is deterministically extrapolated. Alternative block lengths 1 and 6 use their own fixed seeds; the block-3 robustness row reuses the main run exactly.
+
+Each month: (1) observe reference FX and crypto prices; (2) determine rates using only prior FX returns; (3) accrue unpaid debt; (4) calculate CRs; (5) register first strict threshold breaches through month 12; (6) queue them for the specified execution delay; (7) execute due full-collateral sales and determine congestion; (8) allocate proceeds to debt, penalty and borrower residual, and record loss; (9) retire matching funding, update the capital ledger and borrower outcomes. Unbreached loans repay at month 12; scheduled sales continue through month 14. A standalone one-page algorithm accompanies the revision.
+
+The historical diagnostic uses every complete 14-month market window: 29 overlapping windows per currency--collateral pair. Each provides 12 months for origination and two for possible close-out. A common available-window set avoids comparing timely full windows with shorter delayed samples. These windows overlap and are not independent observations.
+
+Twenty thousand simulated paths reduce numerical integration error conditional on 42 monthly observations. They do not create additional economic observations. We add calendar-aware leave-one-year-out analysis (blocks cannot cross a deleted calendar year), early and late subperiods, an IID bivariate Gaussian log-return benchmark with sample-estimated mean and covariance, and outer block resampling of the 42-return calibration. The Gaussian benchmark preserves contemporaneous covariance but not serial dependence or fat tails; it is a model comparison, not a preferred forecast. Outer-resampling percentile ranges combine calibration perturbations with residual inner simulation noise. With only 100 outer replicates they are descriptive sensitivity bands, not coverage-validated confidence intervals. Joint parameter ranges represent scenario uncertainty rather than probabilities over parameters.
+
+\section{Rate rules and diagnostics}
+For $m_t=\min(k,t-1)$ prior returns and $t>1$, define
 \begin{equation}
- BD_s=\max\left\{d_s-c_0\frac{P_s}{P_0}(1-h_s),0\right\}.
- \label{eq:baddebt}
+A_{t,k}=\max\left\{\exp\left[\frac{12}{m_t}\sum_{u=t-m_t}^{t-1}\log(1+\delta_u)\right]-1,0\right\}.
 \end{equation}
-Portfolio bad debt is the initial-collateral-weighted sum across positions. A reserve ratio $k$ is breached whenever $BD^{port}>k$. The tail capital statistic is $\CVaR_{0.99}$, the mean loss among outcomes at or above the 99th percentile. With a fixed USD reserve $R$, the CVaR-consistent debt ceiling is $R/\CVaR_{0.99}$.
-
-The borrower metric is deliberately conservative. Surviving exposure receives terminal debt erosion $1-d_{12}$. Liquidated exposure receives no depreciation benefit and loses the collectible 13\% liquidation penalty, capped by collateral remaining after debt. The metric excludes collateral investment returns, taxes, conversion costs, and utility from borrowed funds; it is a financing-side diagnostic, not trading profit.
-
-\section{Data and Reproducible Construction}\label{sec:data}
-
-\subsection{MakerDAO activity and portfolio scale}
-
-The on-chain calibration comes from the public MakerDAO Vat trace archive accompanying Chaleenutthawut et al. \cite{Chaleenutthawut2024}. The companion replication package decodes successful ETH-A \texttt{frob} calls with positive signed debt change using MakerDAO's documented accounting conventions \cite{MakerVatDocs,RokniLamouki2026}. The resulting sample contains 130,742 draws from 1 January 2020 through 31 July 2023, 16,846 unique \texttt{urn} identifiers, and DAI 13.318 billion in cumulative draw amount. An \texttt{urn} is an accounting position, not a verified person.
-
-The draw distribution is highly skewed: the median is USD 4,791.78, the mean is USD 101,865.49, the 99th percentile is USD 1.046 million, and the maximum is USD 150.45 million. We publish 100 principal-quantile bins and the exact derivation code. The dynamic loss ratios do not require an assumption that all historical draws were simultaneously outstanding; the observed distribution is an empirical scale anchor, not an outstanding-debt estimate.
-
-\subsection{FX and collateral prices}
-
-Official monthly average exchange rates are obtained from OECD Main Economic Indicators through FRED: \texttt{ARGCCUSMA02STM} for ARS per USD and \texttt{CCUSMA02TRM618N} for TRY per USD \cite{FREDARS,FREDTRY}. ETH and BTC daily USD reference prices come from the free Coin Metrics Community Data archive, pinned to repository commit \texttt{f1a36afb962731c387bb03982758ab0103063da5} and aggregated to the last available daily observation in each month \cite{CoinMetricsData}. The shared sample comprises 43 level observations from January 2020 through July 2023 and 42 joint monthly returns.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.93\textwidth]{figures/figure2_market_paths.png}
-\caption{Observed market paths used for calibration. FX series are official monthly averages in LCU per USD; crypto series are Coin Metrics month-end reference prices. Each panel is indexed to January 2020.}\label{fig:paths}
-\end{figure*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.93\textwidth]{figures/figure3_joint_shocks.png}
-\caption{Joint monthly LCU depreciation and crypto returns. Upper-right observations combine depreciation with collateral appreciation; lower-right observations combine depreciation with collateral decline and are the main joint stress for a borrower.}\label{fig:joint}
-\end{figure*}
-
-\begin{table*}[t]
-\centering
-\caption{Data sources and construction.}\label{tab:data}
-\small
-\begin{tabularx}{\textwidth}{p{3.0cm}p{3.0cm}p{2.2cm}X}
-\toprule
-Input & Source & Coverage & Use \\
-\midrule
-MakerDAO debt draws & Public Vat trace archive and documented decoder \cite{Chaleenutthawut2024,MakerVatDocs} & 130,742 events, 2020-01 to 2023-07 & Portfolio scale and principal distribution \\
-ARS/USD & OECD MEI via FRED, \texttt{ARGCCUSMA02STM} & 43 monthly levels & LCU debt translation \\
-TRY/USD & OECD MEI via FRED, \texttt{CCUSMA02TRM618N} & 43 monthly levels & LCU debt translation \\
-ETH/USD and BTC/USD & Coin Metrics Community Data & Daily, aggregated to 43 month-ends & Collateral paths \\
-Joint returns & Authors' construction; no missing eligible months & 42 monthly pairs per currency--asset & Replay and moving-block bootstrap \\
-\bottomrule
-\end{tabularx}
-\end{table*}
-
-\begin{table*}[t]
-\centering
-\caption{Joint-return descriptives, February 2020--July 2023.}\label{tab:descriptive}
-\small
-\resizebox{0.92\textwidth}{!}{\input{../tables/table_market_descriptives.tex}}
-\begin{minipage}{0.95\textwidth}\footnotesize
-\emph{Notes:} FX mean is the arithmetic mean monthly increase in LCU per USD. Crypto SD is the sample standard deviation of monthly USD returns. Correlation is contemporaneous Pearson correlation. There are 42 paired returns.
-\end{minipage}
-\end{table*}
-
-Figure~\ref{fig:joint} illustrates why separate marginal shocks are insufficient. The contemporaneous correlations are modestly negative for ARS/ETH ($-0.105$), TRY/ETH ($-0.183$), and TRY/BTC ($-0.222$), but the sign alone does not identify liquidation risk. Joint adverse months---LCU depreciation and negative crypto return---occur in 35.71\% to 47.62\% of observations, depending on the pair. The block bootstrap therefore resamples paired, ordered observations rather than drawing FX and collateral independently.
-
-\section{Stress-Test Design}\label{sec:method}
-
-\subsection{Historical replay and moving-block bootstrap}
-
-The historical replay applies the model to every contiguous 12-month window in the 42-return history, producing 31 realised paths per currency--collateral pair. The stochastic analysis uses the moving-block bootstrap of K\"unsch \cite{Kunsch1989}. A three-month starting index is selected uniformly with replacement; contiguous paired FX and crypto returns are copied until a 12-month path is formed. This preserves observed contemporaneous dependence and short-run clustering inside each block. We generate 20,000 paths per currency--collateral pair with seed \texttt{20260810}. Rate and mechanism comparisons within a pair use exactly the same paths.
-
-The bootstrap is an empirical stress distribution, not a structural forecast. It assumes that the limited 2020--2023 return blocks are informative for scenario construction, and it cannot generate regimes absent from that history. Robustness tests use one- and six-month blocks.
-
-\subsection{Rate rules}
-
-Three nominal annual rate rules are compared:
-\begin{enumerate}
-  \item \textbf{Static 20\%:} $i_t=0.20$ in every month.
-  \item \textbf{Adaptive 75\% pass-through:} $i_1=0.20$ and, thereafter,
-  \begin{equation}
-  i_t=\operatorname{clip}_{[0.05,1.50]}\left(0.10+0.75\widehat{\Delta E}_{t-1}^{ann}\right),
-  \end{equation}
-  where $\widehat{\Delta E}_{t-1}^{ann}$ is annualised geometric depreciation over up to the previous three months.
-  \item \textbf{Indexed 100\% pass-through:}
-  \begin{equation}
-  i_t=\operatorname{clip}_{[0.05,2.00]}\left(0.05+\widehat{\Delta E}_{t-1}^{ann}\right).
-  \end{equation}
-\end{enumerate}
-Both adaptive rules use only lagged information. They are design scenarios, not estimates of governance behaviour or optimal contracts.
-
-\subsection{Collateral, liquidation, and reserves}
-
-Initial collateral ratios lie on a 31-point grid from 150\% to 225\%. Exposure weights follow a triangular density with mode 175\%, chosen to place substantial mass near the liquidation boundary while retaining an upper buffer. This distribution is not observed from the trace archive and is therefore reported as an explicit stress assumption. The liquidation threshold is 150\%.
-
-The timely mechanism executes in the breach month with an 8\% base auction haircut. The stressed mechanism executes one month later with a 15\% base haircut. Both add $0.20L_t$ for simultaneous liquidation, capped at a total haircut of 30\%. Reserve ratios are 5\%, 10\%, and 20\% of initial debt. Robustness varies the block length, base haircut, delay, congestion slope, and liquidation threshold one at a time.
-
-\begin{table*}[t]
-\centering
-\caption{Baseline model parameters.}\label{tab:parameters}
-\small
-\begin{tabularx}{\textwidth}{p{4.0cm}p{3.0cm}X}
-\toprule
-Parameter & Baseline & Interpretation \\
-\midrule
-Horizon & 12 months & Common design and replay horizon \\
-Bootstrap paths & 20,000 per pair & Three-month joint moving blocks; seed 20260810 \\
-Initial collateral ratio & 150--225\%; mode 175\% & Triangular exposure distribution on 31 grid points \\
-Liquidation threshold & 150\% & Breach trigger \\
-Timely auction & 0-month delay; 8\% base haircut & Base execution design \\
-Stressed auction & 1-month delay; 15\% base haircut & Operational stress design \\
-Congestion surcharge & $0.20\times$ monthly liquidated share & Endogenous market-depth proxy; total haircut capped at 30\% \\
-Borrower penalty & 13\% of debt, collateral-capped & Applied only to executed liquidations \\
-Reserve ratios & 5\%, 10\%, 20\% & Protocol loss-absorption grid \\
-Rate rules & Static 20\%; adaptive 75\%; indexed 100\% & Lagged pass-through to observed depreciation \\
-\bottomrule
-\end{tabularx}
-\end{table*}
-
-\subsection{Outcomes and validation}
-
-For each path we retain: any-liquidation incidence, exposure-weighted liquidated share, mean bad debt, 99\% value-at-risk and CVaR, reserve-breach indicators, terminal debt erosion, survivor-weighted borrower benefit after penalty, and a CVaR-consistent debt ceiling for a USD 10 million reserve. Reported Monte Carlo confidence intervals use binomial standard errors for incidence and cross-path standard errors for mean loss. Every table value is machine-generated. The validation file checks path counts, row counts, finite outputs, and probability bounds.
-
-\section{Results}\label{sec:results}
-
-\subsection{Liquidation is path-dependent and widespread}
-
-Figure~\ref{fig:liquidation} reports cohort-specific probabilities under timely execution. Lower initial collateral sharply increases liquidation, but rate policy also matters. A higher nominal rate increases $d_t$ and lowers $CR_t$ unless depreciation and collateral appreciation compensate. Consequently, the adaptive and indexed rules shift the liquidation curve upward relative to static 20\% pricing. This is the first element of the design trilemma: rate indexation removes the borrower subsidy by increasing the debt balance, but that same adjustment consumes collateral headroom.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.94\textwidth]{figures/figure4_liquidation_curves.png}
-\caption{Liquidation probability by initial collateral ratio and rate rule under timely execution. Each curve uses 20,000 joint paths and the same paths across rules within a currency--collateral pair.}\label{fig:liquidation}
-\end{figure*}
-
-Table~\ref{tab:main} focuses on ETH collateral and timely execution. Under static 20\% pricing, 41.91\% of ARS exposure and 41.71\% of TRY exposure is liquidated on average; borrower debt erosion remains positive because depreciation frequently exceeds nominal debt growth. Under the adaptive 75\% rule, liquidated exposure rises to 48.90\% and 47.96\%. Mean terminal debt erosion becomes negative: lagged rate increases more than offset the average USD debt reduction in the simulated paths. Indexed 100\% pricing intensifies this result.
-
-\begin{table*}[t]
-\centering
-\caption{Main ETH-collateral outcomes under timely liquidation.}\label{tab:main}
-\small
-\resizebox{0.94\textwidth}{!}{\input{../tables/table_main_results.tex}}
-\begin{minipage}{0.97\textwidth}\footnotesize
-\emph{Notes:} Liquidated is the expected exposure share executed during the 12-month horizon. Bad debt and CVaR are percentages of initial principal. Debt erosion is $1-d_{12}$ before conditioning on liquidation; negative values mean that nominal rates more than offset depreciation on average.
-\end{minipage}
-\end{table*}
-
-\subsection{Borrower benefit and protocol loss form a frontier}
-
-Figure~\ref{fig:frontier} places mean protocol bad debt against survivor-weighted borrower benefit. Static pricing lies above the zero-benefit line for both currencies but does not eliminate bad debt. The adaptive rules move downward and generally rightward: borrower benefit disappears while protocol loss increases because the higher debt balance triggers more collateral disposal and larger shortfalls during severe paths. This does not imply that permanently low rates are sustainable. It shows that rate policy alone cannot substitute for collateral buffers, auction capacity, or reserves.
-
-Under static 20\% ETH pricing, the mean borrower financing-side benefit after modelled liquidation penalty is 6.78\% for ARS and 3.84\% for TRY. Under the adaptive 75\% rule it is $-8.28$\% and $-9.69$\%, respectively. These quantities deliberately set the benefit of liquidated exposure to zero before penalty and exclude gains or losses on the collateral asset; they should not be interpreted as realised user returns.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.92\textwidth]{figures/figure5_design_frontier.png}
-\caption{Borrower--protocol design frontier under timely liquidation. Marker shape identifies collateral and colour identifies the rate rule. A desirable design would move upward and left, but no tested rule dominates on both dimensions.}\label{fig:frontier}
-\end{figure*}
-
-\subsection{Delay, auction stress, and reserve adequacy}
-
-The execution mechanism materially changes loss even when the set of underlying return paths is fixed. Under adaptive ARS/ETH pricing, timely execution produces mean bad debt of 3.44\% and 99\% CVaR of 30.26\%. A one-month delay and 15\% base haircut raise these to 5.39\% and 52.51\%. TRY/ETH mean bad debt rises from 3.21\% to 4.76\%, while CVaR rises from 25.75\% to 46.63\%. The probability of exhausting a 10\% reserve rises from 10.97\% to 15.86\% for ARS and from 12.32\% to 15.03\% for TRY.
-
-\begin{table*}[t]
-\centering
-\caption{Liquidation mechanism and reserve comparison under the adaptive 75\% rule with ETH collateral.}\label{tab:mechanism}
-\small
-\resizebox{0.96\textwidth}{!}{\input{../tables/table_mechanism_comparison.tex}}
-\begin{minipage}{0.97\textwidth}\footnotesize
-\emph{Notes:} Any liquidation is the probability that at least one collateral-ratio cohort is executed; liquidated exposure is more informative for economic magnitude. The safe ceiling is $10$ million divided by 99\% CVaR and therefore assumes a USD reserve with no other claims.
-\end{minipage}
-\end{table*}
-
-Figure~\ref{fig:reserve} shows that reserve adequacy is non-linear. Moving from a 5\% to 10\% reserve materially reduces breach probability, but tail outcomes remain; a 20\% reserve still breaches in 4.72\% of timely ARS paths and 4.05\% of timely TRY paths under the adaptive rule. Under delayed stress, the corresponding probabilities exceed 10\%. A reserve cannot be selected from mean loss alone.
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.90\textwidth]{figures/figure6_reserve_breach.png}
-\caption{Reserve-breach probability for the adaptive 75\% rule with ETH collateral. The stressed line combines one-month execution delay with a 15\% base haircut.}\label{fig:reserve}
-\end{figure*}
-
-For a USD 10 million reserve, 99\% CVaR implies a debt ceiling of approximately USD 33.0 million for ARS/ETH and USD 38.8 million for TRY/ETH under timely adaptive execution. Under delayed stress, those ceilings fall to USD 19.0 million and USD 21.4 million. These are model-consistent capacity indicators, not recommended launch limits: peg liabilities, operating expenses, concentration, governance-token backstops, and legal claims are outside the calculation.
-
-\subsection{Historical rolling-window replay}
-
-The realised replay confirms that severe outcomes are not solely artifacts of random recombination. Across 31 windows under timely adaptive pricing, mean ETH liquidated exposure is 54.09\% for ARS and 53.82\% for TRY. Mean bad debt is 3.73\% and 3.96\%; the worst ETH windows begin in June 2022 and reach 27.00\% and 22.79\% bad debt. For BTC, the worst windows begin in July 2021.
-
-\begin{table*}[t]
-\centering
-\caption{Realised 12-month rolling-window replay under adaptive 75\% pricing and timely liquidation.}\label{tab:replay}
-\small
-\resizebox{0.96\textwidth}{!}{\input{../tables/table_historical_replay.tex}}
-\begin{minipage}{0.97\textwidth}\footnotesize
-\emph{Notes:} Thirty-one overlapping windows are evaluated per pair. Maximum liquidated exposure can reach 100\% of the assumed initial-collateral distribution. Worst start identifies the window with maximum bad debt.
-\end{minipage}
-\end{table*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.93\textwidth]{figures/figure7_historical_replay.png}
-\caption{Historical rolling-window replay for ETH collateral, adaptive 75\% pricing, and timely liquidation. Values are plotted by the first month of each realised 12-month window.}\label{fig:replay}
-\end{figure*}
-
-\section{Robustness and Sensitivity}\label{sec:robustness}
-
-The robustness grid isolates one parameter at a time for ETH collateral and the adaptive 75\% rule. Changing the block length from one to six months leaves mean bad debt in a relatively narrow range. Auction and congestion assumptions matter more. For ARS, a 5\% base haircut produces mean bad debt near 2.7\%, while a 15\% haircut produces about 4.8\%. Setting the congestion slope to zero reduces mean bad debt to about 0.7\%. TRY shows the same ranking.
-
-The liquidation threshold changes the timing and composition of sales. A lower 140\% threshold reduces liquidation frequency but permits deeper collateral deterioration before sale, increasing mean bad debt relative to a 160\% threshold in these paths. This illustrates why lower liquidation frequency is not synonymous with lower protocol loss.
-
-\begin{table*}[t]
-\centering
-\caption{One-factor robustness for adaptive 75\% pricing with ETH collateral.}\label{tab:robustness}
-\scriptsize
-\resizebox{0.98\textwidth}{!}{\input{../tables/table_robustness.tex}}
-\begin{minipage}{0.98\textwidth}\footnotesize
-\emph{Notes:} Each currency uses 10,000 deterministic bootstrap paths per variation. Base-block mechanism variations reuse the same resampled paths. Parameter values are varied one at a time; rows are not alternative full designs.
-\end{minipage}
-\end{table*}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.91\textwidth]{figures/figure8_robustness.png}
-\caption{Mean bad debt under robustness variations. Congestion and auction recovery are larger loss drivers than the bootstrap block length in the tested grid.}\label{fig:robustness}
-\end{figure*}
-
-Monte Carlo precision is high relative to the reported economic differences. For example, the 95\% interval for any liquidation under adaptive ARS/ETH pricing is 65.64--66.95\%, and the interval for mean bad debt is 3.34--3.53\%. These intervals measure simulation error conditional on the empirical return distribution and assumptions; they do not capture model uncertainty.
-
-\section{Protocol-Design Implications}\label{sec:implications}
-
-\subsection{A design trilemma}
-
-The results reveal three competing objectives:
-\begin{enumerate}
-  \item preserve a material depreciation-driven financing advantage for borrowers;
-  \item index borrowing rates strongly enough to prevent systematic erosion of the protocol's loan asset; and
-  \item keep liquidation, auction loss, and reserve requirements low under volatile collateral.
-\end{enumerate}
-Within the tested architecture, no rate rule satisfies all three. Static pricing preserves the first objective but exposes the protocol to mispricing and demand expansion if depreciation accelerates. Full lagged indexation addresses the second only imperfectly and worsens the third by increasing debt after depreciation has already occurred. Safer designs require multiple controls rather than more aggressive rate feedback alone.
-
-\subsection{Rates, buffers, and debt ceilings}
-
-A practical rate rule should be forward-looking and state-contingent rather than a mechanical extrapolation of recent depreciation. It could combine expected inflation or forward-market information with utilisation, peg deviation, collateral volatility, and reserve adequacy. However, adding variables does not create executable FX liquidity. Governance should publish the formula, update cadence, data sources, caps, and emergency fallback.
-
-Collateral policy should be currency- and asset-specific. A higher initial buffer lowers breach probability, while an excessively high liquidation threshold may increase sales during temporary shocks. Debt ceilings should be tied to tail loss and available reserves. Because the CVaR-consistent ceiling falls almost by half under delayed execution, operational readiness and auction depth are capital policy, not merely technical implementation details.
-
-\subsection{Auction capacity and loss allocation}
-
-The congestion result implies that liquidator and market-making capacity should be stress-tested before issuance grows. Measures may include diversified auction participants, bounded lot sizes, pre-committed backstop liquidity, circuit breakers, and transparent fallback rules. These mechanisms introduce their own governance and centralisation trade-offs. They should be evaluated under adverse conditions rather than inferred from normal-time spreads.
-
-Residual loss allocation must also be explicit. Borrower collateral is first-loss protection, but bad debt can reach reserves, governance-token holders through recapitalisation, liquidity providers through impaired redemption, or stablecoin holders through a depeg. A protocol should not market borrower debt erosion without explaining which balance-sheet stakeholder funds it when asset recovery is insufficient.
-
-\subsection{FX execution and peg credibility}
-
-Official monthly FX rates provide an auditable numeraire but may differ from parallel or executable rates under capital controls. A live local-currency stablecoin requires mint and redemption channels, market makers with settlement access, and robust local legal analysis. Recent evidence that stablecoin flows interact with conventional FX markets reinforces the need to model market impact and parity deviations rather than treat an official reference rate as frictionless \cite{Aldasoro2026}.
-
-\section{Limitations}\label{sec:limitations}
-
-The study has ten material limitations. First, the system is counterfactual: no analysed MakerDAO borrower incurred ARS- or TRY-denominated debt. Second, historical MakerDAO draw timing and size need not represent demand for a local-currency product. Third, initial collateral ratios are an explicit triangular stress distribution because the source draw file does not provide a complete contemporaneous vault balance for every event. Fourth, 42 monthly joint returns are a small and unusual calibration window; block bootstrap paths cannot represent unobserved regimes. Fifth, monthly resolution cannot capture intramonth oracle latency, transaction ordering, MEV, or minute-level liquidation cascades. The one-month delay is therefore a coarse operational stress, not an estimate of real oracle delay.
-
-Sixth, the haircut-congestion function is transparent but illustrative; it is not estimated from ARS- or TRY-stablecoin auctions. Seventh, official FX averages may not be executable and can differ materially from parallel markets. Eighth, the borrower metric excludes collateral opportunity cost, taxes, conversion spreads, stablecoin depeg, and the utility of borrowed funds. Ninth, the solvency calculation focuses on collateral recovery and a USD reserve; it does not model redemption runs, duration mismatch, governance-token dilution, or legal seniority. Tenth, overlapping historical windows are descriptive and not independent observations.
-
-These limitations preclude claims of optimal pricing, live-protocol safety, or user profitability. They do not invalidate the comparative result that rate rules, collateral paths, liquidation frictions, and reserve policy must be evaluated jointly.
-
-\section{Conclusion}\label{sec:conclusion}
-
-This paper extends borrower-side debt erosion into a path-dependent protocol solvency problem. Using public MakerDAO draw calibration, official ARS and TRY exchange rates, Coin Metrics ETH and BTC prices, realised rolling windows, and 20,000 joint bootstrap paths, it finds that crypto-collateral liquidation remains material even when local-currency depreciation reduces the USD value of debt. Under adaptive 75\% pricing and timely ETH liquidation, roughly 48--49\% of the assumed exposure distribution is liquidated on average and mean bad debt is 3.2--3.4\% of principal. Delay and stressed auction recovery raise both mean and tail loss substantially.
-
-Rate indexation is not a standalone cure. It removes the depreciation-driven borrower advantage but can increase liquidation by raising debt faster than collateral buffers adjust. Auction congestion, reserve capital, and debt ceilings therefore belong in the core product design. The central conclusion is conditional but clear: a local-currency DeFi lender may offer useful programmable credit, yet it cannot promise both persistent debt erosion and low protocol risk without identifying who supplies the missing value and how losses are absorbed. A live pilot would require higher-frequency executable FX data, observed user demand, audited contracts, market-maker commitments, legal review, and pre-funded loss capacity beyond this design study.
-
-\section*{Data Availability}
-
-The complete replication package is publicly available at \url{https://github.com/nikorokni/local-currency-defi-solvency-stress-test}. It includes the official FRED CSV files, pinned Coin Metrics analysis-window extracts, processed joint monthly panel, MakerDAO sample-construction and principal-calibration files, all result CSVs, machine-generated LaTeX tables, figures, source checksums, and validation anchors. The underlying MakerDAO event archive and its decoded event-level file are documented and linked to the companion repository because the raw archive is too large for ordinary Git hosting. No proprietary dataset is required.
-
-\section*{Code Availability}
-
-Python scripts prepare the source data and reproduce the historical replay, moving-block bootstrap, rate rules, liquidation paths, bad-debt estimates, reserve tests, robustness checks, tables, and figures. A requirements file and one-command reproduction script are included. The code uses a fixed seed, does not require private keys or wallet access, and does not call a proprietary API. The compiled manuscript and all reported anchors can be rebuilt from the repository.
-
-\section*{Author Contributions}
-
-\textbf{Niko Rokni Lamouki:} Conceptualization, methodology, software, formal analysis, data curation, visualization, writing--original draft, and project administration. \textbf{Salma Soofiyan:} Conceptualization, validation, interpretation, and writing--review and editing. Both authors approved the final manuscript.
-
-\section*{Declarations}
-
-\textbf{Conflict of interest.} The authors declare no conflict of interest.\\
-\textbf{Funding.} No external funding was reported for this study.\\
-\textbf{Ethics approval.} The study uses public blockchain traces and aggregate market series and does not involve human participants.\\
-\textbf{Consent for publication.} Both authors consent to publication.\\
-\textbf{Use of generative AI.} Automated tools assisted code generation, language editing, and reproducibility checks. The authors are responsible for the study design, data choices, verification, interpretation, and final text.
-
-\begin{thebibliography}{99}
-
-\bibitem{Schar2021}
-Sch\"ar F.
-Decentralized finance: On blockchain- and smart contract-based financial markets.
-\textit{Federal Reserve Bank of St. Louis Review}. 2021;103(2):153--174.
-doi:10.20955/r.103.153-74.
-
-\bibitem{Werner2022}
-Werner SM, Perez D, Gudgeon L, Klages-Mundt A, Harz D, Knottenbelt WJ.
-SoK: Decentralized finance (DeFi).
-In: \textit{Proceedings of the 4th ACM Conference on Advances in Financial Technologies}. 2022. pp. 30--46.
-doi:10.1145/3558535.3559780.
-
-\bibitem{Gudgeon2020Funds}
-Gudgeon L, Werner SM, Perez D, Knottenbelt WJ.
-DeFi protocols for loanable funds: Interest rates, liquidity and market efficiency.
-In: \textit{Proceedings of the 2nd ACM Conference on Advances in Financial Technologies}. 2020. pp. 92--112.
-doi:10.1145/3419614.3423254.
-
-\bibitem{Saengchote2023}
-Saengchote K.
-Decentralized lending and its users: Insights from Compound.
-\textit{Journal of International Financial Markets, Institutions and Money}. 2023;87:101807.
-doi:10.1016/j.intfin.2023.101807.
-
-\bibitem{Cornelli2025}
-Cornelli G, Gambacorta L, Garratt R, Reghezza A.
-Why DeFi lending? Evidence from Aave V2.
-\textit{Journal of Financial Intermediation}. 2025;63:101166.
-doi:10.1016/j.jfi.2025.101166.
-
-\bibitem{Qin2021Liquidations}
-Qin K, Zhou L, Gamito P, Jovanovic P, Gervais A.
-An empirical study of DeFi liquidations: Incentives, risks, and instabilities.
-In: \textit{Proceedings of the 21st ACM Internet Measurement Conference}. 2021. pp. 336--350.
-doi:10.1145/3487552.3487811.
-
-\bibitem{SasiBrodesky2023}
-Sasi-Brodesky A, Kaousar Nassr I.
-DeFi liquidations: Volatility and liquidity.
-\textit{OECD Working Papers on Finance, Insurance and Private Pensions}. 2023;(48).
-doi:10.1787/0524faaf-en.
-
-\bibitem{Perez2021}
-Perez D, Werner SM, Xu J, Livshits B.
-Liquidations: DeFi on a knife-edge.
-In: \textit{Financial Cryptography and Data Security}. 2021. pp. 457--476.
-
-\bibitem{Kjaer2021}
-Kj{\ae}r M, Di Angelo M, Salzer G.
-Empirical evaluation of MakerDAO's resilience.
-In: \textit{2021 3rd Conference on Blockchain Research and Applications for Innovative Networks and Services}. 2021. pp. 193--200.
-doi:10.1109/BRAINS52497.2021.9569811.
-
-\bibitem{Eskandari2021}
-Eskandari S, Salehi M, Gu WC, Clark J.
-SoK: Oracles from the ground truth to market manipulation.
-In: \textit{Proceedings of the 3rd ACM Conference on Advances in Financial Technologies}. 2021. pp. 127--141.
-doi:10.1145/3479722.3480994.
-
-\bibitem{Chaleenutthawut2024}
-Chaleenutthawut Y, Davydov V, Evdokimov M, Kasemsuk S, Kruglik S, Melnikov G, Yanovich Y.
-Loan portfolio dataset from MakerDAO blockchain project.
-\textit{IEEE Access}. 2024;12:24843--24854.
-doi:10.1109/ACCESS.2024.3363225.
-
-\bibitem{MakerVatDocs}
-MakerDAO.
-Vat detailed documentation.
-\textit{Maker Protocol Technical Documentation}. 2020.
-Available from: \url{https://docs.makerdao.com/smart-contract-modules/core-module/vat-detailed-documentation}. Accessed 8 August 2026.
-
-\bibitem{RokniLamouki2026}
-Rokni Lamouki N, Soofiyan S.
-Inflation-driven debt erosion in local-currency DeFi lending: Counterfactual evidence from MakerDAO ETH-A borrowing activity.
-\textit{Working paper and replication package}. 2026.
-Available from: \url{https://github.com/nikorokni/inflation-driven-debt-erosion-defi}.
-
-\bibitem{Lyons2023}
-Lyons RK, Viswanath-Natraj G.
-What keeps stablecoins stable?
-\textit{Journal of International Money and Finance}. 2023;131:102777.
-doi:10.1016/j.jimonfin.2022.102777.
-
-\bibitem{KlagesMundt2022}
-Klages-Mundt A, Minca A.
-While stability lasts: A stochastic model of noncustodial stablecoins.
-\textit{Mathematical Finance}. 2022;32(4):943--981.
-doi:10.1111/mafi.12357.
-
-\bibitem{GortonZhang2023}
-Gorton GB, Zhang JY.
-Taming wildcat stablecoins.
-\textit{University of Chicago Law Review}. 2023;90(3):909--971.
-
-\bibitem{Auer2023}
-Auer R, Cornelli G, Frost J.
-Cryptocurrencies and stablecoins in emerging markets and developing economies.
-\textit{BIS Papers}. 2023;(138).
-Available from: \url{https://www.bis.org/publ/bppdf/bispap138.htm}.
-
-\bibitem{Copestake2023}
-Copestake A, Le A, Papageorgiou E, Tan B.
-Macro-financial implications of foreign crypto assets for small developing economies.
-\textit{IMF FinTech Notes}. 2023;2023(12).
-doi:10.5089/9798400258367.063.
-
-\bibitem{Aldasoro2026}
-Aldasoro I, Beltr\'an P, Grinberg F.
-Stablecoin flows and spillovers to FX markets.
-\textit{BIS Working Papers}. 2026;(1340).
-Available from: \url{https://www.bis.org/publ/work1340.htm}.
-
-\bibitem{FREDARS}
-Organisation for Economic Co-operation and Development.
-Currency conversions: US dollar exchange rate, average of daily rates, national currency per USD for Argentina [ARGCCUSMA02STM].
-\textit{FRED, Federal Reserve Bank of St. Louis}. 2026.
-Available from: \url{https://fred.stlouisfed.org/series/ARGCCUSMA02STM}. Accessed 8 August 2026.
-
-\bibitem{FREDTRY}
-Organisation for Economic Co-operation and Development.
-Currency conversions: US dollar exchange rate, average of daily rates, national currency per USD for T\"urkiye [CCUSMA02TRM618N].
-\textit{FRED, Federal Reserve Bank of St. Louis}. 2026.
-Available from: \url{https://fred.stlouisfed.org/series/CCUSMA02TRM618N}. Accessed 8 August 2026.
-
-\bibitem{CoinMetricsData}
-Coin Metrics.
-Free Coin Metrics data archives.
-\textit{Coin Metrics Community Data}. 2026.
-Available from: \url{https://github.com/coinmetrics/data}. Commit f1a36afb962731c387bb03982758ab0103063da5. Accessed 8 August 2026.
-
-\bibitem{Kunsch1989}
-K\"unsch HR.
-The jackknife and the bootstrap for general stationary observations.
-\textit{The Annals of Statistics}. 1989;17(3):1217--1241.
-doi:10.1214/aos/1176347265.
-
-\end{thebibliography}
-
+All rules start at $r_1=0.20$ and use expanding history until their full lookback is available; no preceding unobserved return is fabricated. Policies are static 20\%; adaptive $\operatorname{clip}(0.10+0.75A_{t,3},0.05,1.50)$; indexed $\operatorname{clip}(0.05+A_{t,3},0.05,2.00)$; lower-cap adaptive with a 0.60 ceiling; and trailing-12 adaptive with $k=12$ and a 0.60 ceiling. Partial adjustment uses the lower-cap target $r_t^*$ and
+\begin{equation}
+r_t=r_{t-1}+\operatorname{clip}\{0.25(r_t^*-r_{t-1}),-0.05,0.05\}.
+\end{equation}
+Thus governance moves at most five percentage points per month. The trailing-12 policy has fewer than 12 past observations within the initial origination year; full history becomes available only in close-out. We label that initialization explicitly rather than implying a pre-existing 12-month history.
+
+Tables~\ref{tab:ratesars}--\ref{tab:ratestry} report rates actually charged while ETH loan debt remains outstanding under timely auctions in months 1--12, including the standardized initialization month. Statistics weight observations by outstanding initial-principal exposure, not by accrued debt. Rates are nominal annual percentages; cap frequency is a percentage of those exposure-months; change is mean absolute month-to-month movement in percentage points. Full median-change diagnostics are in the CSV. Rates after a cohort settles are excluded; unweighted posted-rate means and medians are also retained in the CSV. We do not add a purported forward-looking rate without forecasts or forward-market data.
+\begin{table}[H]\centering\small\setlength{\tabcolsep}{4pt}
+\caption{ARS rate diagnostics. P90/P99 are distribution percentiles; all policy coefficients are assumptions.}\label{tab:ratesars}\input{../tables/rates_ARS}\end{table}
+\begin{table}[H]\centering\small\setlength{\tabcolsep}{4pt}
+\caption{TRY rate diagnostics, with the same units and exposure-month denominator as Table~\ref{tab:ratesars}.}\label{tab:ratestry}\input{../tables/rates_TRY}\end{table}
+
+\section{Results and denominators}
+\subsection{Main outcomes}
+Liquidated exposure is $\E[\sum_jw_j\ind(\tau_j\leq12)]$, including all scheduled sales after close-out. Mean credit loss is $\E[\ell_s]$ relative to initial principal. CVaR$_{99}$ is the average of the largest 1\% of path-level losses (200 observations in a 20,000-path run). For non-multiples of 100, the implementation uses the largest $\lceil.01N\rceil$ losses. The probability of \emph{any} portfolio liquidation is a different statistic and can be large because a very small positive cohort weight is close to the threshold. It is not an individual borrower's liquidation probability. Cohort-specific probabilities are provided in \texttt{cohort\_results.csv}; averaging them with $w_j$ gives the probability for a representative normalized-principal position drawn from the assumed CR distribution, not an empirically identified MakerDAO position.
+
+Table~\ref{tab:main} reports six rate rules under timely auctions. The baseline adaptive mean credit loss is \ArsLoss{} for ARS/ETH and \TryLoss{} for TRY/ETH, with tail loss \ArsTail{} and \TryTail{}. Higher pass-through increases liquidation in these cases, while partial adjustment attenuates that response. These are comparisons within the tested design space. A three-way tension among financing relief, rate indexation and low credit loss is not proof that every possible protocol must face the same frontier.
+\begin{table}[H]\centering\small
+\caption{ETH, timely execution. All entries other than labels are percentages: Liq. = initial exposure liquidated; Loss = credit loss / initial principal; CVaR$_{99}$ = tail loss / initial principal; Net effect = financing-side effect / initial principal.}\label{tab:main}\input{../tables/main}\end{table}
+\begin{figure}[H]\centering\includegraphics[width=\linewidth]{../figures/policy_tradeoff.pdf}
+\caption{Conditional policy comparison for ETH and timely auctions. Labels 1--6 denote static, adaptive, indexed, trailing-12, partial-adjustment and lower-cap rules. Both axes are normalized by initial principal. This discrete set is not an efficient frontier or impossibility theorem.}\end{figure}
+
+\subsection{Breach, execution and funding}
+The revised horizon treatment makes breach incidence comparable across delay-only and timely scenarios: the underlying breach criterion and path are unchanged. Table~\ref{tab:mech} distinguishes sales executed by month 12 from pending exposures and reports all losses after scheduled close-out. Haircut-only and delay-only comparisons isolate effects that the former ``one-month delay'' scenario confounded. Delay need not increase loss on every path, since collateral may recover before irrevocable execution.
+\begin{table}[H]\centering\small\setlength{\tabcolsep}{4pt}
+\caption{ETH, adaptive rule. Breach, executed and pending are percentages of initial exposure; executed + pending = breach at month 12. Loss and CVaR$_{99}$ include all scheduled close-outs and use initial principal as denominator.}\label{tab:mech}\input{../tables/mechanisms}\end{table}
+\begin{table}[H]\centering\small\setlength{\tabcolsep}{4pt}
+\caption{Different risk measures, ETH adaptive rule. Any liq. = percentage of paths with any cohort liquidation; Under-coll. = initial exposure pending and below CR 1 at month 12; Credit budget = percentage of paths with gross credit loss above 10\% of initial principal; Capital gap = percentage with a negative matched-funding settlement ledger.}\label{tab:capital}\input{../tables/capital}\end{table}
+
+The timely 10\% credit-budget breach probabilities are \ArsReserve{} and \TryReserve{}. They are neither deposit-redemption probabilities nor general insolvency rates. The funding diagnostic can be smaller because interest receipts and matching LCU principal liabilities matter. Conversely, its synchronized maturity and frictionless reference-FX conversion omit important sources of real funding stress. Zero simulated accounting gaps in a scenario do not establish safety.
+
+\subsection{Borrower outcomes}
+Survivor and liquidated effects in Table~\ref{tab:borrower} divide pooled effects by their respective pooled initial exposure across paths. The all-portfolio effect divides by complete ex ante exposure. These conditional quantities reconcile exactly using the pooled survival weight. Loss/liquidated debt divides aggregate contractual loss by aggregate accrued USD debt of liquidated positions; it is not the mean of pathwise ratios. The revised measure includes financing-side outcomes of liquidated positions instead of assigning them only a penalty.
+\begin{table}[H]\centering\small
+\caption{ETH, timely auctions. Financing-side effects (survivors, liquidated, all) are percentages of the respective initial exposure; the final column is credit loss as a percentage of accrued liquidated debt.}\label{tab:borrower}\input{../tables/borrower}\end{table}
+
+\section{Robustness and uncertainty}
+\subsection{Market measurement and short history}
+Using the old mixed monthly convention with the revised engine produces mean losses of \ArsMixedLoss{} and \TryMixedLoss{}, versus \ArsLoss{} and \TryLoss{} with monthly averages for both series. Measurement choice is therefore material; the old numbers cannot be retained as invariant conclusions. Appendix tables report block lengths, omitted years, subperiods and the parametric benchmark. Omitting 2022 sharply reduces losses in both currencies; this short history is economically consequential. The parametric model can yield different tail estimates despite fitting first and second log-return moments.
+\begin{table}[H]\centering\small\setlength{\tabcolsep}{4pt}
+\caption{ETH adaptive/timely uncertainty. All loss entries are percentages of initial principal. MC halfwidth is $1.96$ times the conditional simulation standard error. Input low/high are 2.5/97.5 percentiles of 100 outer-resampled mean losses; tail low/high are the analogous CVaR$_{99}$ percentiles. They are sensitivity bands, not validated confidence intervals.}\label{tab:uncertainty}\input{../tables/uncertainty}\end{table}
+
+\subsection{Joint auction and collateral assumptions}
+The joint grid contains $3\times3\times3\times4=108$ parameter combinations per currency for ETH and the adaptive rule. Every cell uses the same first 5,000 baseline paths. This isolates parameter changes, although 99\% tail estimates then average only 50 paths. Table~\ref{tab:joint} and Figures~\ref{fig:ars}--\ref{fig:try} show the full grid. Loss magnitudes are assumption-dependent; a claim of robust low loss across all plausible designs would be unsupported. Larger collateral buffers generally reduce exposure to liquidation, but auction frictions and delay still matter. The grid does not assign probability or empirical plausibility weights to its cells.
+\begin{table}[H]\centering\small
+\caption{Joint sensitivity ranges, ETH adaptive rule. Min/max span haircut, congestion and delay combinations within each CR distribution. All values are loss percentages of initial principal; tail refers to CVaR$_{99}$.}\label{tab:joint}\input{../tables/joint_ranges}\end{table}
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../figures/joint_ARS.pdf}
+\caption{ARS/ETH joint mean-loss surface. Rows specify assumed collateral distribution and execution delay in months; columns give base haircut / congestion slope in percent. Cell values are mean credit loss as a percentage of initial principal. The effective haircut is capped at 30\%.}\label{fig:ars}\end{figure}
+\begin{figure}[t]\centering\includegraphics[width=\linewidth]{../figures/joint_TRY.pdf}
+\caption{TRY/ETH joint mean-loss surface, using the same units, grid, rate rule and common-path design as Figure~\ref{fig:ars}.}\label{fig:try}\end{figure}
+
+\section{Design implications and limitations}
+The demonstrated implications are narrow: reporting a gross credit budget as ``protocol solvency'' obscures funding assumptions; testing auction haircut independently of delay improves interpretation; rate caps and partial adjustment change debt growth; and a short historical calibration produces substantial input uncertainty. An initial-principal ceiling derived solely from CVaR is not labelled ``safe'' here. Diversified auction participants, circuit breakers and backstop liquidity could change the assumed haircut or execution mechanism, but their efficacy is not tested and requires separate investigation.
+
+Several constraints remain. Monthly-average reference marks miss intramonth triggers and executable price paths. Official FX may be inaccessible. The 42-month calibration contains unusual economic regimes, and block resampling assumes enough local stationarity to reuse them. The parameter grid is a design exercise, not an estimated population distribution. Principal and leverage are independent by assumption, while real borrowers can adjust collateral, repay, refinance or default strategically. Auctions sell the entire position, do not simulate order books or induced price feedback, and impose an illustrative linear congestion rule. The funding diagnostic excludes early redemption, endogenous stablecoin prices, legal priority, operational costs, cross-currency hedges and governance recapitalization. Longer data, an executable FX dataset and a separately specified redemption/run model would be required for stronger claims.
+
+Data alignment, initialization, close-out censoring, cohort alternatives and parameter sensitivity have been addressed directly rather than left as disclaimers. This does not remove their residual modelling uncertainty. The revised numerical estimates supersede the submitted version's headline values.
+
+\section{Conclusion}
+This study provides a transparent counterfactual credit-loss framework linking local-currency debt growth, crypto collateral and liquidation settlement. On the stated monthly-average calibration, the adaptive timely-auction mean losses are \ArsLoss{} and \TryLoss{} for ARS/ETH and TRY/ETH. Principal-weight invariance clarifies the descriptive role of MakerDAO draw sizes, while close-out accounting distinguishes pending sales from executed liquidations. Measurement, economic subperiod and auction assumptions materially affect results. The contribution is a reproducible stress-testing method and an explicit accounting boundary, not evidence that an actual local-currency lending protocol is viable, solvent or safe.
+
+\section*{Reproducibility and revision materials}
+The repository supplies raw market extracts, transformation code, model tests, machine-generated CSVs, figures, parameter provenance, a one-page algorithm, a point-by-point response and a headline reconciliation table. \texttt{bash run\_all.sh} rebuilds inputs, simulations, exhibits and PDFs. The event-level MakerDAO input is optional and external; its inherited summaries do not affect main percentage outcomes.
+
+\appendix
+\section{Additional generated results}
+\begin{table}[H]\centering\small
+\caption{BTC, timely auctions. Same definitions and percentage denominators as Table~\ref{tab:main}.}\input{../tables/btc}\end{table}
+\begin{table}[H]\centering\small
+\caption{Historical replay: adaptive rule, timely auction. The 29 overlapping windows each provide 12 months of origination and two months of possible close-out. Liquidation and credit loss use initial exposure as denominator.}\input{../tables/historical}\end{table}
+\begin{table}[H]\centering\small
+\caption{ARS/ETH robustness: adaptive rule and timely auctions, 20,000 paths. Every numerical entry is a percentage of initial principal. Mixed monthly measurement uses average FX and month-end crypto; it is a diagnostic, not the main specification.}\input{../tables/robust_ARS}\end{table}
+\begin{table}[H]\centering\small
+\caption{TRY/ETH robustness, with the same definitions as the preceding table.}\input{../tables/robust_TRY}\end{table}
+\section{Headline reconciliation}
+\begin{table}[H]\centering\small
+\caption{Shared source values for abstract, narrative and generated tables: ETH, adaptive rule, timely auction. The source file is \texttt{results/main\_results.csv}; exact locations and unrounded values are in \texttt{headline\_reconciliation.csv}.}\input{../tables/reconciliation}\end{table}
+\input{references}
 \end{document}

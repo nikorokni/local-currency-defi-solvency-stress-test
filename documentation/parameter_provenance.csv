@@ -1,0 +1,16 @@
+category,parameter,value,unit,source,qualification
+observed,FX,OECD/FRED monthly averages,LCU/USD,data/raw_fx/,"43 levels; official reference, not executable"
+observed,Crypto prices,Coin Metrics daily PriceUSD averaged monthly,USD/asset,data/raw_prices/,"43 levels, verified pinned upstream extracts"
+external source,MakerDAO principal bins,100 bins; 130742 inherited draws,DAI interpreted as USD scale,companion paper,Descriptive; not percentage-loss calibration
+external source,Bootstrap method,non-circular moving blocks,method,Kunsch 1989,Numerical B=3 is a design choice
+inherited protocol convention,Core accounting,collateralized loans and accrued debt,design pattern,Maker/Sky Vat documentation,No numeric deployment calibration claimed
+illustrative,Initial CR,31 points 1.5..2.25; triangular mode 1.75,ratio,analysis/stress_test.py,Uniform; exponential near threshold; buffered 2..3 alternatives
+illustrative,Liquidation threshold,1.5,ratio,analysis/stress_test.py,Strict < trigger; irrevocable
+illustrative,Penalty,0.13,fraction of accrued debt,analysis/stress_test.py,Collect only from post-recovery auction surplus
+illustrative,Haircut,0.08 baseline; grid 0.05/0.08/0.15,fraction,analysis/stress_test.py,Not estimated
+illustrative,Congestion slope,0.20 baseline; grid 0/0.20/0.40,fraction per liquidated exposure share,analysis/stress_test.py,Effective haircut capped at 0.30
+illustrative,Execution delay,0 baseline; grid 0/1/2,months,analysis/stress_test.py,Debt accrues; closeout extension 2
+illustrative,Rate policies,initial .20; floor .05; caps 1.5/2/.6,nominal annual fraction,manuscript Section 6,Adaptive .10+.75A; indexed .05+A; partial .25; move limit .05
+illustrative,Funding,non-interest-bearing LCU face; retirement at loan settlement,LCU,manuscript Section 3,No early redemption or endogenous peg
+illustrative,Reserve,0.10,initial USD principal fraction,analysis/stress_test.py,No reserve yield; no recapitalization
+numerical setting,Sampling,main 20000; joint 5000; outer100 inner2000,paths/replicates,results/run_metadata.json,No added economic observations

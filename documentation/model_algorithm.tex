@@ -1,0 +1,28 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=23mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype,amsmath,enumitem}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\begin{document}
+\begin{center}{\Large\bfseries Monthly model algorithm}\par\small Local-currency DeFi credit-loss stress test\end{center}
+\textbf{Inputs.} 42 joint monthly-average FX/crypto returns; assumed CR grid and weights; a lagged rate rule; threshold $\theta=1.5$; delay $d\in\{0,1,2\}$; haircut $h_0$, congestion slope $\gamma$, cap 0.30; penalty 0.13; reserve $k=0.10$.
+
+\medskip
+\textbf{Initialization.} Sample non-circular three-month joint blocks to obtain 14 months; truncate the final block. Set FX, crypto and LCU debt factors to one. Set month-1 rate to 20\%. Set every cohort active, with no scheduled sale; initialize USD settlement capital to $k$ per initial portfolio USD. One matching LCU funding principal is outstanding per loan.
+
+\medskip
+\textbf{For each path and month $t=1,\ldots,14$:}
+\begin{enumerate}[leftmargin=*,itemsep=7pt]
+\item \textbf{Observe prices.} Update FX factor $X_t=X_{t-1}(1+\delta_t)$ and crypto factor $Z_t=Z_{t-1}(1+g_t)$.
+\item \textbf{Set rate.} Apply the specified rule to returns dated strictly before $t$; use expanding history during initialization. Apply its floor, cap and adjustment limit.
+\item \textbf{Accrue debt.} For unpaid loans, update $U_t=U_{t-1}(1+r_t/12)$ and USD debt $D_t=U_t/X_t$.
+\item \textbf{Value collateral.} For CR cohort $j$, collateral is $C_{jt}=c_jZ_t$ and $CR_{jt}=C_{jt}/D_t$.
+\item \textbf{Register breach.} Through month 12, queue the first strict breach $CR_{jt}<1.5$. Record breach month $\tau_j$. The decision is irrevocable.
+\item \textbf{Apply delay.} Schedule sale for $e_j=\tau_j+d$. Debt keeps accruing. A recovery of CR does not cancel a queued sale.
+\item \textbf{Execute due sales.} Sum due initial-exposure weights $q_t$ and set $h_t=\min(0.30,h_0+\gamma q_t)$. Sell all due collateral; net proceeds are $a_j=(1-h_t)C_{jt}$.
+\item \textbf{Allocate proceeds.} Recover $R_j=\min(D_t,a_j)$; record $L_j=D_t-R_j$; collect penalty $\pi_j=\min(0.13D_t,[a_j-D_t]_+)$; return $V_j=[a_j-D_t-\pi_j]_+$. Mark the position settled.
+\item \textbf{Update funding and outcomes.} Retire matching funding principal at $1/X_t$ USD per initial USD. Add weighted $R_j+\pi_j-1/X_t$ to capital. Record financing effect $1-R_j-\pi_j-h_tC_{jt}$. At month 12, unbreached loans repay at par, retire funding and retain collateral. Only scheduled sales remain for months 13--14.
+\end{enumerate}
+\textbf{Aggregate.} Separately report breach, executed, pending and undercollateralized exposure at month 12; all close-out credit losses; survivor/liquidated/ex ante financing effects; and gross credit-budget and matched-funding gap indicators. Estimate CVaR$_{99}$ from the worst 1\% of path losses. Never label the funding-gap statistic a peg-failure forecast.
+\end{document}

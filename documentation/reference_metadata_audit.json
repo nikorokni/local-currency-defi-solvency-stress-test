@@ -1,0 +1,906 @@
+[
+  {
+    "doi": "10.20955/r.103.153-74",
+    "status": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "doi": "10.1145/3558535.3559780",
+    "status": "metadata retrieved",
+    "title": [
+      "SoK: Decentralized Finance (DeFi)"
+    ],
+    "authors": [
+      {
+        "given": "Sam",
+        "family": "Werner",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Imperial College London, London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Daniel",
+        "family": "Perez",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Imperial College London, London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-4992-4795",
+        "authenticated-orcid": false,
+        "given": "Lewis",
+        "family": "Gudgeon",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Imperial College London, London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-5577-1000",
+        "authenticated-orcid": false,
+        "given": "Ariah",
+        "family": "Klages-Mundt",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Cornell University, Ithaca, USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Dominik",
+        "family": "Harz",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Interlay, London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "William",
+        "family": "Knottenbelt",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Imperial College London, London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2022,
+          9,
+          19
+        ]
+      ]
+    },
+    "container": [
+      "Proceedings of the 4th ACM Conference on Advances in Financial Technologies"
+    ],
+    "volume": null,
+    "issue": null,
+    "page": "30-46",
+    "url": "https://doi.org/10.1145/3558535.3559780"
+  },
+  {
+    "doi": "10.1145/3419614.3423254",
+    "status": "metadata retrieved",
+    "title": [
+      "DeFi Protocols for Loanable Funds"
+    ],
+    "authors": [
+      {
+        "given": "Lewis",
+        "family": "Gudgeon",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Department of Computing, Imperial College London"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Sam",
+        "family": "Werner",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Computing, Imperial College London"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Daniel",
+        "family": "Perez",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Computing, Imperial College London"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "William J.",
+        "family": "Knottenbelt",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Department of Computing, Imperial College London"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2020,
+          10,
+          21
+        ]
+      ]
+    },
+    "container": [
+      "Proceedings of the 2nd ACM Conference on Advances in Financial Technologies"
+    ],
+    "volume": null,
+    "issue": null,
+    "page": "92-112",
+    "url": "https://doi.org/10.1145/3419614.3423254"
+  },
+  {
+    "doi": "10.1016/j.intfin.2023.101807",
+    "status": "metadata retrieved",
+    "title": [
+      "Decentralized lending and its users: Insights from compound"
+    ],
+    "authors": [
+      {
+        "ORCID": "https://orcid.org/0000-0002-1132-8197",
+        "authenticated-orcid": false,
+        "given": "Kanis",
+        "family": "Saengchote",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          9
+        ]
+      ]
+    },
+    "container": [
+      "Journal of International Financial Markets, Institutions and Money"
+    ],
+    "volume": "87",
+    "issue": null,
+    "page": "101807",
+    "url": "https://doi.org/10.1016/j.intfin.2023.101807"
+  },
+  {
+    "doi": "10.1016/j.jfi.2025.101166",
+    "status": "HTTP Error 429: Too Many Requests"
+  },
+  {
+    "doi": "10.1145/3487552.3487811",
+    "status": "metadata retrieved",
+    "title": [
+      "An empirical study of DeFi liquidations"
+    ],
+    "authors": [
+      {
+        "given": "Kaihua",
+        "family": "Qin",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Imperial College London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Liyi",
+        "family": "Zhou",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Imperial College London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Pablo",
+        "family": "Gamito",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Imperial College London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Philipp",
+        "family": "Jovanovic",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "University College London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Arthur",
+        "family": "Gervais",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Imperial College London, United Kingdom"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2021,
+          11,
+          2
+        ]
+      ]
+    },
+    "container": [
+      "Proceedings of the 21st ACM Internet Measurement Conference"
+    ],
+    "volume": null,
+    "issue": null,
+    "page": "336-350",
+    "url": "https://doi.org/10.1145/3487552.3487811"
+  },
+  {
+    "doi": "10.1787/0524faaf-en",
+    "status": "metadata retrieved",
+    "title": [
+      "DeFi liquidations"
+    ],
+    "authors": null,
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          7,
+          31
+        ]
+      ]
+    },
+    "container": [
+      "OECD Working Papers on Finance, Insurance and Private Pensions"
+    ],
+    "volume": null,
+    "issue": null,
+    "page": null,
+    "url": "https://doi.org/10.1787/0524faaf-en"
+  },
+  {
+    "doi": "10.1109/BRAINS52497.2021.9569811",
+    "status": "metadata retrieved",
+    "title": [
+      "Empirical Evaluation of MakerDAO's Resilience"
+    ],
+    "authors": [
+      {
+        "given": "Martin",
+        "family": "Kjaer",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Monika",
+        "family": "di Angelo",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Gernot",
+        "family": "Salzer",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2021,
+          9,
+          27
+        ]
+      ]
+    },
+    "container": [
+      "2021 3rd Conference on Blockchain Research &amp; Applications for Innovative Networks and Services (BRAINS)"
+    ],
+    "volume": null,
+    "issue": null,
+    "page": "193-200",
+    "url": "https://doi.org/10.1109/brains52497.2021.9569811"
+  },
+  {
+    "doi": "10.1145/3479722.3480994",
+    "status": "metadata retrieved",
+    "title": [
+      "SoK"
+    ],
+    "authors": [
+      {
+        "given": "Shayan",
+        "family": "Eskandari",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Concordia University, Montreal, QC, Canada and ConsenSys Diligence"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Mehdi",
+        "family": "Salehi",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Concordia University, Montreal, QC, Canada"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Wanyun Catherine",
+        "family": "Gu",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Stanford University"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Jeremy",
+        "family": "Clark",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Concordia University, Montreal, QC, Canada"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2021,
+          9,
+          26
+        ]
+      ]
+    },
+    "container": [
+      "Proceedings of the 3rd ACM Conference on Advances in Financial Technologies"
+    ],
+    "volume": null,
+    "issue": null,
+    "page": "127-141",
+    "url": "https://doi.org/10.1145/3479722.3480994"
+  },
+  {
+    "doi": "10.1109/ACCESS.2024.3363225",
+    "status": "metadata retrieved",
+    "title": [
+      "Loan Portfolio Dataset From MakerDAO Blockchain Project"
+    ],
+    "authors": [
+      {
+        "given": "Yatipa",
+        "family": "Chaleenutthawut",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Skolkovo Institute of Science and Technology, Moscow, Russia"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0003-1316-3346",
+        "authenticated-orcid": false,
+        "given": "Vyacheslav",
+        "family": "Davydov",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "HSE Tikhonov Moscow Institute of Electronics and Mathematics, HSE University, Moscow, Russia"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Michael",
+        "family": "Evdokimov",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Faculty of Computer Science, HSE University, Moscow, Russia"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Sudarut",
+        "family": "Kasemsuk",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Skolkovo Institute of Science and Technology, Moscow, Russia"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0001-9557-5197",
+        "authenticated-orcid": false,
+        "given": "Stanislav",
+        "family": "Kruglik",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "School of Physical and Mathematical Sciences, Nanyang Technological University, Jurong West, Singapore"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Grigorii",
+        "family": "Melnikov",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "B4B.World, Budva, Montenegro"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0003-4651-7585",
+        "authenticated-orcid": false,
+        "given": "Yury",
+        "family": "Yanovich",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "Skolkovo Institute of Science and Technology, Moscow, Russia"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2024
+        ]
+      ]
+    },
+    "container": [
+      "IEEE Access"
+    ],
+    "volume": "12",
+    "issue": null,
+    "page": "24843-24854",
+    "url": "https://doi.org/10.1109/access.2024.3363225"
+  },
+  {
+    "doi": "10.1016/j.jimonfin.2022.102777",
+    "status": "metadata retrieved",
+    "title": [
+      "What keeps stablecoins stable?"
+    ],
+    "authors": [
+      {
+        "given": "Richard K.",
+        "family": "Lyons",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "given": "Ganesh",
+        "family": "Viswanath-Natraj",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          3
+        ]
+      ]
+    },
+    "container": [
+      "Journal of International Money and Finance"
+    ],
+    "volume": "131",
+    "issue": null,
+    "page": "102777",
+    "url": "https://doi.org/10.1016/j.jimonfin.2022.102777"
+  },
+  {
+    "doi": "10.1111/mafi.12357",
+    "status": "metadata retrieved",
+    "title": [
+      "While stability lasts: A stochastic model of noncustodial stablecoins"
+    ],
+    "authors": [
+      {
+        "given": "Ariah",
+        "family": "Klages\u2010Mundt",
+        "sequence": "first",
+        "affiliation": [
+          {
+            "name": "Center for Applied Mathematics Cornell University Ithaca New York USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-2216-9793",
+        "authenticated-orcid": false,
+        "given": "Andreea",
+        "family": "Minca",
+        "sequence": "additional",
+        "affiliation": [
+          {
+            "name": "School of Operations Research and Information Engineering Cornell University Ithaca New York USA"
+          }
+        ],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2022,
+          7,
+          22
+        ]
+      ]
+    },
+    "container": [
+      "Mathematical Finance"
+    ],
+    "volume": "32",
+    "issue": "4",
+    "page": "943-981",
+    "url": "https://doi.org/10.1111/mafi.12357"
+  },
+  {
+    "doi": "10.5089/9798400258367.063",
+    "status": "metadata retrieved",
+    "title": [
+      "Macro-Financial Implications of Foreign Crypto Assets for Small Developing Economies"
+    ],
+    "authors": [
+      {
+        "ORCID": "https://orcid.org/0000-0001-7506-5691",
+        "authenticated-orcid": true,
+        "given": "Alexander",
+        "family": "Copestake",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-9670-2060",
+        "authenticated-orcid": true,
+        "given": "Anh",
+        "family": "Le",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0009-0005-9076-8340",
+        "authenticated-orcid": true,
+        "given": "Evan",
+        "family": "Papageorgiou",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      },
+      {
+        "ORCID": "https://orcid.org/0000-0002-1311-941X",
+        "authenticated-orcid": true,
+        "given": "Brandon",
+        "family": "Tan",
+        "sequence": "additional",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          2023,
+          12
+        ]
+      ]
+    },
+    "container": [
+      "Fintech Notes"
+    ],
+    "volume": "2023",
+    "issue": "012",
+    "page": "1",
+    "url": "https://doi.org/10.5089/9798400258367.063"
+  },
+  {
+    "doi": "10.1214/aos/1176347265",
+    "status": "metadata retrieved",
+    "title": [
+      "The Jackknife and the Bootstrap for General Stationary Observations"
+    ],
+    "authors": [
+      {
+        "given": "Hans R.",
+        "family": "Kunsch",
+        "sequence": "first",
+        "affiliation": [],
+        "role": [
+          {
+            "vocabulary": "crossref",
+            "role": "author"
+          }
+        ]
+      }
+    ],
+    "published": {
+      "date-parts": [
+        [
+          1989,
+          9,
+          1
+        ]
+      ]
+    },
+    "container": [
+      "The Annals of Statistics"
+    ],
+    "volume": "17",
+    "issue": "3",
+    "page": null,
+    "url": "https://doi.org/10.1214/aos/1176347265"
+  }
+]

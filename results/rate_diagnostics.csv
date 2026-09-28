@@ -1,0 +1,13 @@
+currency,rate_rule,mechanism,collateral,weighting,mean,median,p90,p99,maximum,cap_frequency,mean_abs_monthly_change,median_abs_monthly_change,posted_mean,posted_median
+ARS,static_20,timely,ETH,initial-principal months while debt remains outstanding,0.2,0.2,0.2,0.2,0.2,0,0,0,0.2,0.2
+ARS,adaptive_75,timely,ETH,initial-principal months while debt remains outstanding,0.473465647887,0.414919549942,0.86045073579,1.06323294056,1.09719739351,0,0.10842609667,0.06319639612,0.480503873678,0.428611839069
+ARS,indexed_100,timely,ETH,initial-principal months while debt remains outstanding,0.54730964918,0.465054331635,1.05912472923,1.33431058742,1.37959652468,0,0.143210373091,0.0837961922059,0.558727387126,0.488149118758
+ARS,smooth_12,timely,ETH,initial-principal months while debt remains outstanding,0.427820653424,0.434893394062,0.6,0.6,0.6,0.241595938791,0.0437409295584,0.0150652917971,0.437389534033,0.447127809154
+ARS,partial_adjust,timely,ETH,initial-principal months while debt remains outstanding,0.340458627321,0.338151852741,0.4875,0.552990429171,0.573303222656,0,0.0294660323274,0.0306098351583,0.350318265888,0.35
+ARS,lower_cap,timely,ETH,initial-principal months while debt remains outstanding,0.418779286181,0.417427049445,0.6,0.6,0.6,0.27609124025,0.0662790387852,0.031362312461,0.427822048842,0.428611839069
+TRY,static_20,timely,ETH,initial-principal months while debt remains outstanding,0.2,0.2,0.2,0.2,0.2,0,0,0,0.2,0.2
+TRY,adaptive_75,timely,ETH,initial-principal months while debt remains outstanding,0.464074669626,0.303049494849,1.24962701616,1.5,1.5,0.0741153298649,0.197361135492,0.1,0.484674167142,0.33619173796
+TRY,indexed_100,timely,ETH,initial-principal months while debt remains outstanding,0.53835186926,0.311425674701,1.58283602155,2,2,0.0698096222282,0.26595023039,0.141009560758,0.569936486427,0.36492231728
+TRY,smooth_12,timely,ETH,initial-principal months while debt remains outstanding,0.351977808508,0.321195316508,0.6,0.6,0.6,0.232636253959,0.0618440145605,0.0259885665789,0.375263526192,0.363344295469
+TRY,partial_adjust,timely,ETH,initial-principal months while debt remains outstanding,0.279313839432,0.258922977023,0.426186844494,0.527755577553,0.573303222656,0,0.0322595641572,0.0353724324351,0.291834633243,0.279199248647
+TRY,lower_cap,timely,ETH,initial-principal months while debt remains outstanding,0.342619242797,0.310067974792,0.6,0.6,0.6,0.25273610529,0.103230773683,0.0585682748176,0.356788783055,0.33619173796

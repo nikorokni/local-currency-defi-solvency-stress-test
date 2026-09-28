@@ -1,6 +1,6 @@
 # Data provenance and checksums
 
-Access date for online sources: **8 August 2026**.
+Original acquisition date recorded by the pre-revision repository: **8 August 2026**. Revision verification: **28 September 2026**; see `REFERENCE_AUDIT.md` for what was independently checked.
 
 ## MakerDAO calibration
 
@@ -46,7 +46,7 @@ Official rates may differ from executable parallel-market rates under exchange c
 - Included BTC analysis-window extract: `data/raw_prices/coinmetrics_btc.csv`.
 - BTC extract SHA-256: `d8534df0ef2a8435e414f201c1081773ec5b07a7e20c7cf19fef1183758d5d79`.
 - Upstream full BTC snapshot SHA-256: `06495ff8e643432e6948b7b4686ce44fc106217287dabdc1b38351d9ddec46c3`.
-- Metric: `PriceUSD`; last available daily value in each calendar month.
+- Metric: `PriceUSD`; arithmetic average of daily values in each calendar month in the revised main panel. Month-end prices are used only for the explicitly labelled legacy mixed-measurement diagnostic.
 
 The included files retain only the `time` and `PriceUSD` columns for 1 January 2020 through 31 July 2023. They are deterministic extracts of the pinned upstream snapshots; the upstream checksums above permit independent verification against the complete source files.
 

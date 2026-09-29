@@ -10,6 +10,7 @@ I've uploaded the revised manuscript and complete reproducibility package to Git
 - Generated CSVs: https://github.com/nikorokni/local-currency-defi-solvency-stress-test/tree/main/results
 - Code and verification script: https://github.com/nikorokni/local-currency-defi-solvency-stress-test/tree/main/analysis
 - Reproducibility audit and table/figure source map: https://github.com/nikorokni/local-currency-defi-solvency-stress-test/blob/main/documentation/REPRODUCIBILITY_AUDIT.md
+- Point-by-point response for you: https://github.com/nikorokni/local-currency-defi-solvency-stress-test/blob/main/documentation/RESPONSE_TO_SALMA.pdf
 
 I rebuilt the package from a clean checkout. All 34 checked data, result, and table files matched exactly, and the four figures reproduced with identical rendered images. The audit explains the input sources and the remaining modelling limitations.
 

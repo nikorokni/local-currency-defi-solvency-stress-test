@@ -1,6 +1,6 @@
 # Reproducibility audit — 29 September 2026
 
-## Reviewer concern and scope
+## Salma's reproducibility request and scope
 
 The revised paper reports simulated results and makes reproducibility claims. This record identifies the exact input snapshots, code, generated outputs and manuscript exhibits and reports an independent clean-checkout rebuild. It does **not** establish that illustrative auction and funding assumptions are empirically calibrated, that official FX was executable, or that a real protocol is solvent.
 
@@ -64,4 +64,4 @@ The four authored tables on literature, illustrative balance sheet, notation and
 
 ## Interpretation of a successful audit
 
-The package lets a reviewer regenerate and compare the reported numbers and displays from the archived inputs. It does not validate the assumed collateral distribution, auction haircut, congestion rule, matched-funding liability timing, or economically executable ARS conversion. Those choices are labeled as scenarios and sensitivity checks in the manuscript. Data provenance and computational reproducibility are narrower claims than external validity or Q1 acceptance.
+The package lets Salma regenerate and compare the reported numbers and displays from the archived inputs. It does not validate the assumed collateral distribution, auction haircut, congestion rule, matched-funding liability timing, or economically executable ARS conversion. Those choices are labeled as scenarios and sensitivity checks in the manuscript. Data provenance and computational reproducibility are narrower claims than external validity or Q1 acceptance.

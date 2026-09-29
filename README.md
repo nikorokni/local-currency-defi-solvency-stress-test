@@ -6,7 +6,7 @@ Niko Rokni Lamouki · Salma Soofiyan
 **Major revision, 28 September 2026.** This version supersedes the former *From Debt Erosion to Protocol Solvency* manuscript and its numerical outputs. It studies a hypothetical architecture; it does not establish real-protocol solvency, peg stability or safe capital requirements.
 
 - [Clean revised paper](manuscript/main.pdf)
-- [Point-by-point response](documentation/RESPONSE_TO_REVIEWERS.pdf)
+- [Point-by-point response for Salma](documentation/RESPONSE_TO_SALMA.pdf)
 - [One-page model algorithm](documentation/model_algorithm.pdf)
 - [Parameter provenance](documentation/parameter_provenance.csv)
 - [Headline-number reconciliation](results/headline_reconciliation.csv)

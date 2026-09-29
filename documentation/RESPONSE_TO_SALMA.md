@@ -6,9 +6,9 @@ geometry: margin=24mm
 fontsize: 10pt
 ---
 
-Dear Reviewer,
+Dear Salma,
 
-Thank you for your careful reading and constructive comments. I have revised the model, rerun the analysis, and rewritten the manuscript to make the claims correspond to what the data and simulations can support. In particular, I now distinguish contractual credit loss from the broader question of protocol solvency. I have responded to each point below and provided the revised manuscript, code, generated results, model algorithm, parameter table, and numerical reconciliation.
+I am sending you the point-by-point revision record. I have revised the model, rerun the analysis, and rewritten the manuscript to make the claims correspond to what the data and simulations can support. In particular, I now distinguish contractual credit loss from the broader question of protocol solvency. I have responded to each point below and provided the revised manuscript, code, generated results, model algorithm, parameter table, and numerical reconciliation.
 
 # 1. Title
 
@@ -118,15 +118,15 @@ I have replaced the broad label “borrower benefit” with “financing-side ne
 
 **Response:** I have rebuilt the clean manuscript in a readable single-column format, enlarged the figures, revised captions to define denominators, and defined CVaR at first use. Tables display consistently rounded percentages. The earlier 10.96/10.97 and 15.02/15.03 discrepancies are superseded by recalculated values; shared generated macros supply the revised abstract and narrative. The block-three robustness row reuses exactly the baseline simulated paths, and a test checks equality. I call the combined case a “delayed stressed auction” and report delay-only and haircut-only cases independently.
 
-# Additional reviewer comment: complete reproducibility package
+# Additional request for Salma: complete reproducibility package
 
-**Comment:** The revised manuscript makes reproducibility claims and reports simulations. Before approval, the reviewer needs the repository, data, generated CSVs and code, and must be able to regenerate each table and figure and check the MakerDAO, FX and crypto inputs.
+**Comment:** The revised manuscript makes reproducibility claims and reports simulations. For Salma's assessment, the repository, data, generated CSVs and code must be supplied so that every table and figure can be regenerated and the MakerDAO, FX and crypto inputs checked against the manuscript.
 
 **Response:** I agree that the manuscript needs an auditable package. I have supplied the full repository with archived FX and daily crypto CSVs, the processed monthly panel, all machine-generated simulation CSVs, model and input-preparation code, the table/figure builder, tests, LaTeX source and compiled manuscript. `documentation/REPRODUCIBILITY_AUDIT.md` maps each generated table and figure to its immediate CSV source and records the exact source-series IDs, upstream links, measurement convention and limitations. `documentation/reproducibility_manifest.json` freezes SHA-256 values for 34 input/data/result/table files. From a separate clean checkout I ran `bash run_all.sh`: all 34 of those files matched byte for byte, the manuscript retained 18 pages with identical extracted text, all four figures had identical raster renders, and the unit tests passed. The PDF backends embed new timestamps, so PDF byte hashes are not a meaningful equality test. I added `analysis/verify_reproduction.py` so this check, including an independent monthly-panel calculation and every exhibit reference, can be repeated with a single command after the build.
 
 The MakerDAO event-level CSV is linked at a pinned commit of the companion repository, with SHA-256 `0a9e0f0528345086b3a0f4ece8bb2fddd9080c97f5a0657f27a3549587e132b5`. I verified that file and rebuilt the 100 principal-bin CSV and summary JSON with exact matching hashes. The original blockchain archive decoding was not rerun here; I have made that boundary explicit. The FX snapshots are identified as official OECD/FRED monthly averages; all 43 analysis-window values in each series matched the current FRED source tables. ETH/BTC snapshots are Coin Metrics daily `PriceUSD` marks averaged by month. This verifies the archived-input transformation, not executable FX or intramonth liquidation prices. The model's collateral ratios, auction frictions and funding architecture remain assumed scenarios, not empirically estimated protocol parameters. I do not treat reproducibility alone as validation of those assumptions or as a guarantee of journal approval.
 
-**Reviewer run:** `bash run_all.sh && python analysis/verify_reproduction.py`. For the optional MakerDAO derivative check, add `--makerdao-events /path/to/makerdao_eth_a_draw_events_analysis.csv` to the verifier command.
+**Salma's verification command:** `bash run_all.sh && python analysis/verify_reproduction.py`. For the optional MakerDAO derivative check, add `--makerdao-events /path/to/makerdao_eth_a_draw_events_analysis.csv` to the verifier command.
 
 # Materials supplied
 

@@ -16,5 +16,5 @@ python -m unittest discover -s tests -v
 python analysis/build_outputs.py
 (cd manuscript && pdflatex -interaction=nonstopmode -halt-on-error main.tex && pdflatex -interaction=nonstopmode -halt-on-error main.tex)
 (cd documentation && pdflatex -interaction=nonstopmode -halt-on-error model_algorithm.tex)
-pandoc documentation/RESPONSE_TO_REVIEWERS.md --pdf-engine=pdflatex -o documentation/RESPONSE_TO_REVIEWERS.pdf
+pandoc documentation/RESPONSE_TO_REVIEWERS.md --pdf-engine=pdflatex -V geometry:margin=0.85in -o documentation/RESPONSE_TO_REVIEWERS.pdf
 printf '%s\n' 'Reproduction complete: manuscript/main.pdf and revision documents.'

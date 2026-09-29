@@ -21,3 +21,5 @@ These checks verify implementation identities, not empirical model validity or p
 `run_all.sh` rebuilds the aligned panel, full simulations, tests, reporting tables/macros and PDFs. `analysis/build_outputs.py` is the only source of displayed result tables and headline macros. Numerical values in the abstract and prose are therefore shared with the generated reconciliation file, rather than manually rounded independently.
 
 The upstream ETH/BTC price verification independently matched the archived daily extracts and full source hashes at the pinned Coin Metrics commit. MakerDAO principal summaries remain inherited; raw blockchain decoding was not rerun. Full input provenance and verification limits are documented separately.
+
+The 29 September 2026 clean-checkout rebuild and the executable SHA-256/market-panel verifier are documented in `REPRODUCIBILITY_AUDIT.md`. The optional event-level MakerDAO CSV from the companion repository was hash-checked and regenerated the inherited 100 principal bins and summary exactly. This verifies the derivative, not the original blockchain decoder.

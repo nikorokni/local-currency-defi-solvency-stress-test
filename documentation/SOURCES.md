@@ -10,9 +10,10 @@ Original acquisition date recorded by the pre-revision repository: **8 August 20
 - Decoded event file SHA-256: `0a9e0f0528345086b3a0f4ece8bb2fddd9080c97f5a0657f27a3549587e132b5`.
 - Companion replication repository and decoder: <https://github.com/nikorokni/inflation-driven-debt-erosion-defi>.
 - Companion commit: `6f6710982391b88f48a3dc7bb5bbfecc7691a47f`.
+- [Pinned event-level CSV](https://github.com/nikorokni/inflation-driven-debt-erosion-defi/blob/6f6710982391b88f48a3dc7bb5bbfecc7691a47f/data/processed/makerdao_eth_a_draw_events_analysis.csv), present with the same Git blob at the companion repository's published 28 September 2026 main commit `054cae4cc86b545ac660125044a6295833ddc8de`.
 - Included derivatives: `sample_construction.csv`, 100 principal-quantile bins, and the exact principal summary.
 
-The event-level file is 36 MB and the original raw archive is substantially larger. They are linked rather than duplicated. Running `analysis/prepare_data.py --makerdao-events <path>` regenerates the included principal calibration.
+The event-level file is 36 MB and the original raw archive is substantially larger. They are linked rather than duplicated. Running `python analysis/verify_reproduction.py --makerdao-events <path>` verifies its SHA-256 and regenerates the included principal calibration in a temporary directory. The current audit does not rerun the original raw blockchain decoding.
 
 ## Official foreign-exchange series
 
